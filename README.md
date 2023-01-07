@@ -1,7 +1,7 @@
 HP ProBook 4530s OpenCore
 =========================
 
-This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-Guide/ "Install guide") [EFI folder](https://github.com/ubihazard/probook-4530s/releases/download/v1.0/EFI.7z "Release") that makes it possible to run macOS on old Hewlett-Packard ProBook 4530s Sandy Bridge laptops. Only models with integrated Intel HD3000 graphics are compatible. Other models, such as with NVIDIA GPUs, will require additional configuration tweaks, including turning the dedicated GPU off.
+This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-Guide/ "Install guide") [EFI folder](https://github.com/ubihazard/probook-4530s/releases/download/v1.0/EFI.7z "Release") that makes it possible to run macOS on old Hewlett-Packard ProBook 4530s series Sandy Bridge laptops. Only models with integrated Intel HD3000 graphics are compatible. Other models, such as with NVIDIA GPUs, will require additional configuration tweaks, including turning the dedicated GPU off.
 
 Although this laptop is very old, macOS works surprisingly well on it with pretty much full compatibility. I’ve used it only for writing text, browsing web, and watching HD YouTube videos anyway (nothing demanding). Don’t expect running XCode with iOS simulator on it, however. Also handy for managing your iThings.
 
@@ -42,7 +42,7 @@ cp ~/Library/Preferences/com.apple.AppleMultitouchTrackpad.plist ./
 plutil -convert xml1 com.apple.AppleMultitouchTrackpad.plist
 ```
 
-Make your edits (make sure your syntax is correct) and convert the XML config back into binary format:
+Make your edits (make sure the syntax is correct) and convert the XML config back into binary format:
 
 ```bash
 nano com.apple.AppleMultitouchTrackpad.plist
@@ -62,7 +62,7 @@ A pre-made trackpad configuration file with tap to click is [provided](Library/P
 Separate config for installer
 -----------------------------
 
-For USB installer you would need a different OpenCore `config.plist` modified specifically for installing macOS. It disables some kexts which are useless during installation (Wi-Fi, bluetooth, card reader, etc.), doesn’t modify SIP flags, enables verbose boot (with kernel text messages), and contains a different SMBIOS mac model identifier which allows to install Big Sur.
+For USB installer you would need a different OpenCore `config.plist` modified specifically for installing macOS. It disables some kexts which are useless during installation (Wi-Fi, bluetooth, card reader, etc.), doesn’t modify SIP flags, enables verbose boot (with kernel text messages), and has a different SMBIOS mac model identifier which allows to install Big Sur.
 
 Grab it [directly](config.plist "USB installer OpenCode config") from this repository (not from releases page).
 
@@ -72,6 +72,11 @@ Post-install
 Don’t forget to fill in your own SMBIOS information (board serial, system UUID, etc.) after successful installation.
 
 Follow a [guide](https://github.com/Marcuriee/Hackintosh-Guide/blob/main/configuring-smbios.md "Generate SMBIOS") to make a correct SMBIOS for your hackintosh laptop.
+
+Credits
+-------
+
+All credits go to [Acidanthera team](https://github.com/acidanthera), [RehabMan](https://github.com/RehabMan), [dortania](https://github.com/dortania), and the rest of talented individuals who work hard to make running macOS on regular PCs and unsupported hardware a reality.
 
 ⭐ Support
 ---------
