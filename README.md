@@ -16,7 +16,7 @@ A note on HD3000 issues
 
 Even with 8GB of system RAM the Intel GPU on this laptop model is plagued by random graphical glitches, which manifest in grey blocks suddenly popping around, messed up visuals, and most annoyingly, the system eventually freezes and becomes completely unresponsive (except mouse cursor still moving on the screen).
 
-What worked for me to drastically reduce it is calculating the correct KASLR slide value according to this [guide](https://dortania.github.io/OpenCore-Install-Guide/extras/kaslr-fix.html). In my case the slide value resulted in **128**, which is set in the `config.plist`:
+What worked for me to drastically reduce it is calculating the correct KASLR slide value according to this [guide](https://dortania.github.io/OpenCore-Install-Guide/extras/kaslr-fix.html "KASLR slide guide"). In my case the slide value resulted in **128**, which is set in the `config.plist`:
 
 ```xml
 <key>boot-args</key>
