@@ -3,7 +3,7 @@ HP ProBook 4530s OpenCore
 
 This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-Guide/ "Install guide") [EFI folder](https://github.com/ubihazard/probook-4530s/releases/download/v1.0/EFI.7z "Release") that makes it possible to run macOS on old Hewlett-Packard ProBook 4530s series Sandy Bridge laptops. Only models with integrated Intel HD3000 graphics are compatible. Other models, such as with NVIDIA GPUs, will require additional configuration tweaks, including turning the dedicated GPU off.
 
-Although this laptop is very old, macOS works surprisingly well on it with pretty much full compatibility. I’ve used it only for writing text, browsing web, and watching HD YouTube videos anyway (nothing demanding). Don’t expect running XCode with iOS simulator on it, however. Also handy for managing your iThings.
+Although this laptop is very old, macOS works surprisingly well on it with pretty much full compatibility. (In fact, I’m writing this document sitting in front of it right now, on macOS.) I’ve used it only for writing text, browsing web, and watching HD YouTube videos anyway (nothing demanding). Don’t expect running XCode with iOS simulator on it, however. Also handy for managing your iThings.
 
 Most ACPI patches are from legendary [RehabMan](https://github.com/RehabMan "Thanks dude") and were carefully ported from his original Clover config. I just mapped the USB ports and assembled the compatible kexts together.
 
@@ -30,7 +30,7 @@ This seems to work in Sierra, and the laptop no longer locks up, but sadly doesn
 Configuring trackpad
 --------------------
 
-Since your laptop battery is probably long dead, macOS would not recognize it. And without recognized battery modern versions of macOS also prevent changing trackpad settings (go figure).
+Since your laptop battery is probably long dead, macOS would not recognize it. And without a recognized battery modern versions of macOS also prevent changing trackpad settings (go figure).
 
 In reality the trackpad is fully working, – you just can’t access its settings. In order to configure it you would have to manually edit the binary `.plist` file at `~/Library/Preferences/com.apple.AppleMultitouchTrackpad.plist`.
 
