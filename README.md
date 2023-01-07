@@ -1,7 +1,7 @@
 HP ProBook 4530s OpenCore
 =========================
 
-This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-Guide/ "Install guide") [EFI folder](https://github.com/ubihazard/probook-4530s/releases/download/v1.0/EFI.7z "Release") that makes it possible to run macOS on old Hewlett-Packard ProBook 4530s series Sandy Bridge laptops. Only models with integrated Intel HD3000 graphics are compatible. Other models, such as with NVIDIA GPUs, will require additional configuration tweaks, including turning the dedicated GPU off.
+This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-Guide/ "Install guide") [EFI folder](https://github.com/ubihazard/probook-4530s/releases/download/v1.0/EFI.7z "Release") that makes it possible to run [macOS](https://support.apple.com/macos) on old Hewlett-Packard ProBook 4530s series Sandy Bridge laptops. Only models with integrated Intel HD3000 graphics are compatible. Other models, such as with NVIDIA GPUs, will require additional configuration tweaks, including turning the dedicated GPU off.
 
 Although this laptop is very old, macOS works surprisingly well on it with pretty much full compatibility. (In fact, I’m writing this document sitting in front of it right now, on macOS.) I’ve used it only for writing text, browsing web, and watching HD YouTube videos anyway (nothing demanding). Don’t expect running XCode with iOS simulator on it, however. Also handy for managing your iThings.
 
