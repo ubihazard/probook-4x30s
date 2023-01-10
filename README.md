@@ -37,7 +37,7 @@ With HD3000 it is possible to change the maximum amount of video ram macOS can a
 <integer>768</integer>
 ```
 
-The OC `config.plist` patch doesn’t seem to work on Big Sur with OCLP-installed HD3000 kext. Instead, the `AppleIntelSNBGraphicsFB` kext has to be [modified directly](https://github.com/ubihazard/macos-scripts/tree/main/Scripts#root-patching "Patch guide") with the help of binary hexadecimal editor. And the VRAM size value in `AppleIntelHD3000Graphics`’s `Info.plist` is also different:
+The OC `config.plist` patch doesn’t seem to work on Big Sur with OCLP-installed HD3000 kexts. Instead, the `AppleIntelSNBGraphicsFB` (“Sandy Bridge graphics”) kext has to be [modified directly](https://github.com/ubihazard/macos-scripts/tree/main/Scripts#root-patching "Patch guide") with the help of binary hexadecimal editor. And the VRAM size value in `AppleIntelHD3000Graphics`’s `Info.plist` is also different:
 
 ```xml
 <key>VRAMOverride</key>
