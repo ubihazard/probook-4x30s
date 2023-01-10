@@ -25,7 +25,26 @@ What worked for me to drastically reduce it is calculating the correct KASLR sli
 
 Your value might be different, so if the system panics and doesn’t boot, try calculating it according to the guide linked above and change it accordingly in the `config.plist`.
 
-This seems to work in Sierra, and the laptop no longer locks up, but sadly doesn’t help Big Sur much.
+This seems to work in Sierra, and the laptop no longer locks up, but sadly doesn’t help Big Sur much (at least it doesn’t seem to freeze anymore).
+
+HD3000 VRAM patch
+-----------------
+
+With HD3000 it is possible to change the maximum amount of video ram macOS can allocate from system. The patches are available for macOS Sierra+ and can be enabled via OpenCore’s `config.plist`. Additionally, the `AppleIntelHD3000Graphics` kext `Contents/Info.plist` has to be modified for patch to be complete:
+
+```xml
+<key>VRAMOverride</key>
+<integer>768</integer>
+```
+
+The OC `config.plist` patch doesn’t seem to work on Big Sur with OCLP-installed HD3000 kext. Instead, the `AppleIntelSNBGraphicsFB` kext has to be [modified directly](https://github.com/ubihazard/macos-scripts/tree/main/Scripts#root-patching "Patch guide") with the help of binary hexadecimal editor. And the VRAM size value in `AppleIntelHD3000Graphics`’s `Info.plist` is also different:
+
+```xml
+<key>VRAMOverride</key>
+<integer>1536</integer>
+```
+
+Don’t forget to [rebuild the kernel cache](https://github.com/ubihazard/macos-scripts/tree/main/Scripts#rebuild-kernel-cache) after you are done patching `AppleIntelHD3000Graphics`.
 
 Configuring trackpad
 --------------------
@@ -72,6 +91,30 @@ Post-install
 Don’t forget to fill in your own SMBIOS information (board serial, system UUID, etc.) after successful installation.
 
 Follow a [guide](https://github.com/Marcuriee/Hackintosh-Guide/blob/main/configuring-smbios.md "Generate SMBIOS") to make a correct SMBIOS for your hackintosh laptop.
+
+Fixing transparency effects in Big Sur
+--------------------------------------
+
+In Big Sur (and later) transparent effects, such as blur, render incorrectly on non-Metal GPUs (HD3000 is not capable of Metal API). Luckily, a fix is available, forcing rendering of such effects using legacy method, which doesn’t require Metal support:
+
+```bash
+defaults write -g Moraea_BlurBeta -bool true
+```
+
+You might also experiment with different blur strength `ASB_BlurOverride`, style of dark window borders `Moraea_RimBeta`, and dark menu bar text `Moraea_DarkMenuBar`:
+
+```bash
+defaults write -g ASB_BlurOverride -float 30
+defaults write -g Moraea_RimBeta -bool false
+defaults write -g Moraea_DarkMenuBar -bool false
+```
+
+Clover fallback
+---------------
+
+The provided EFI folder also contains a copy of Clover bootloader in case if you have trouble getting OpenCore to work. The included Clover version has only been tested with macOS Sierra and High Sierra, and it definitely won’t be able to boot Big Sur.
+
+Note, however, that Clover and OpenCore don’t mix well together. In my experience, a NVRAM reset is required when switching from Clover to OpenCore, at least in case of High Sierra, or the kernel would panic with weird error message. The NVRAM reset can be performed from OpenCore boot screen: press space if you don’t see its menu entry.
 
 Credits
 -------
