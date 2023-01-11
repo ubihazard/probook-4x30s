@@ -16,16 +16,16 @@ A note on HD3000 issues
 
 Even with 8GB of system RAM the Intel GPU on this laptop model is plagued by random graphical glitches, which manifest in grey blocks suddenly popping around, messed up visuals, and most annoyingly, the system eventually freezes and becomes completely unresponsive (except mouse cursor still moving on the screen).
 
-What worked for me to drastically reduce it is calculating the correct KASLR slide value according to this [guide](https://dortania.github.io/OpenCore-Install-Guide/extras/kaslr-fix.html "KASLR slide guide"). In my case the slide value resulted in **128**, which is set in the `config.plist`:
+What worked for me to drastically reduce it is calculating the correct KASLR slide value according to this [guide](https://dortania.github.io/OpenCore-Install-Guide/extras/kaslr-fix.html "KASLR slide guide"). In my case the slide value resulted in **8**, which is set in the `config.plist`:
 
 ```xml
 <key>boot-args</key>
-<string>-no_compat_check amfi_get_out_of_my_way=1 slide=128</string>
+<string>-no_compat_check amfi_get_out_of_my_way=1 slide=8</string>
 ```
 
 Your value might be different, so if the system panics and doesn’t boot, try calculating it according to the guide linked above and change it accordingly in the `config.plist`.
 
-This seems to work in Sierra, and the laptop no longer locks up, but sadly doesn’t help Big Sur much (at least it doesn’t seem to freeze anymore).
+This seems to work in Sierra, and the laptop no longer locks up, but sadly doesn’t help Big Sur much.
 
 HD3000 VRAM patch
 -----------------
@@ -45,6 +45,11 @@ The OC `config.plist` patch doesn’t seem to work on Big Sur with OCLP-installe
 ```
 
 Don’t forget to [rebuild the kernel cache](https://github.com/ubihazard/macos-scripts/tree/main/Scripts#rebuild-kernel-cache) after you are done patching `AppleIntelHD3000Graphics`.
+
+Brightness adjustment after EDID injection
+------------------------------------------
+
+If you inject custom EDID for your internal display you will notice that `Fn` brightness adjustment keys will no longer function and the brightness slider in Big Sur would also show up as disabled in control center area. The reason for this is that in case of custom EDID injection macOS insists on having a particular value in device id field of your EDID. You can use the [edidparser.rb](https://github.com/ubihazard/probook-4530s/releases/download/v1.0/edidparser.rb) script which would extract your current EDID and patch it for brightness keys to work again. This script isn’t my work and is provided as-is.
 
 Configuring trackpad
 --------------------
@@ -119,7 +124,7 @@ Note, however, that Clover and OpenCore don’t mix well together. In my experie
 Credits
 -------
 
-All credits go to [Acidanthera team](https://github.com/acidanthera), [RehabMan](https://github.com/RehabMan), [dortania](https://github.com/dortania), and the rest of talented individuals who work hard to make running macOS on regular PCs and unsupported hardware a reality.
+All credits go to [Acidanthera team](https://github.com/acidanthera), [RehabMan](https://github.com/RehabMan), [dortania](https://github.com/dortania), and the rest of talented individuals who worked hard to make running macOS on regular PCs and unsupported hardware a reality.
 
 ⭐ Support
 ---------
