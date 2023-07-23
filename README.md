@@ -49,7 +49,7 @@ Depending on a version of macOS you would choose to install, you might also need
 
 ![BCM94352HMB Wi-Fi BIOS whitelist hardware hack](bcm94352hmb_hw_whitelist_hack.jpg)
 
-Chances are you already have a compatible Atheros AR9285 adapter so you can safely go with Big Sur.
+Chances are you already have a compatible Atheros AR9285 adapter so you can just install Big Sur without bothering with any hardware mods.
 
 Alternatively, Intel Wi-Fi modules have recently became a viable option with [itlwm](https://github.com/OpenIntelWireless/itlwm "macOS Intel wireless kexts"). You can try making your Intel Wi-Fi work by copying itlwm kext(s) to EFI Kexts folder and adding them in OpenCore `config.plist`. Anyway, Intel Wi-Fi setup won‘t be covered here.
 
