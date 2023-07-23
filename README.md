@@ -1,55 +1,446 @@
-HP ProBook 4530s OpenCore
-=========================
+<p align="center"><img alt="ProBook 4x30s" src="probook-4x30s-banner.png"/></p>
+<h1 align="center">ProBook 4x30s OpenCore</h1>
+<h3 align="center">4330s / 4530s / 4730s</h3>
 
-This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-Guide/ "Install guide") [EFI folder](https://github.com/ubihazard/probook-4530s/releases/download/v1.0/EFI.7z "Release") that makes it possible to run [macOS](https://support.apple.com/macos) on old Hewlett-Packard ProBook 4530s series Sandy Bridge laptops. Only models with integrated Intel HD3000 graphics are compatible. Other models, such as with NVIDIA GPUs, will require additional configuration tweaks, including turning the dedicated GPU off.
+I have a very old Hewlett-Packard laptop: [HP ProBook 4530s](https://support.hp.com/us-en/product/hp-probook-4530s-notebook-pc/5060880). The tough bastard has a stylish metal frame, great chiclet-style scissor keyboard, and it also stubbornly refuses to die after all these years. There are several things you could do with an old laptop, but thanks to marvels of modern software engineering and in particular, – [OpenCore](https://github.com/acidanthera/OpenCorePkg), – at least some laptops might have a brighter perspective. So instead of throwing it away or ~[turning](https://en.wikipedia.org/wiki/Zombie) it into a boring Linux file server~, we will be putting macOS on it, – and not just some old outdated version, but a modern one.
 
-Although this laptop is very old, macOS works surprisingly well on it with pretty much full compatibility. (In fact, I’m writing this document sitting in front of it right now, on macOS.) I’ve used it only for writing text, browsing web, and watching HD YouTube videos anyway (nothing demanding). Don’t expect running XCode with iOS simulator on it, however. Also handy for managing your iThings.
+![macOS Installed on a ProBook 4530s](about-this-probook.png)
 
-Most ACPI patches are from legendary [RehabMan](https://github.com/RehabMan "Thanks dude") and were carefully ported from his original Clover config. I just mapped the USB ports and assembled the compatible kexts together.
+This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-Guide/ "OpenCore bootloader install guide") [EFI folder](https://github.com/ubihazard/probook-4x30s/releases/download/v1.1/EFI-0.9.4-5afed6e.7z "Download") with everything needed to run modern versions of [macOS](https://support.apple.com/macos) on old HP ProBook 4x30s series Sandy Bridge laptops: with little [adjustments](#restoring-power-management) for your particular laptop. Only models with integrated Intel HD3000 graphics are supported. Other models, such as with AMD GPUs, will require additional steps to [turn their dedicated GPU off](https://github.com/acidanthera/WhateverGreen "WhateverGreen configuration") since it likely isn‘t supported by macOS.
 
-The recommended macOS version to install is Sierra, followed by Big Sur. (You can install both side-by-side.) Sierra is the only version of macOS where I managed to almost completely resolve the HD3000 graphical artifacts and freeze problem (a well-known issue with these old GPUs on macOS). Visual glitches still happen occasionally, but rarely and seem to go away on their own, and the laptop doesn’t hang / freeze eventually. Big Sur would require [Open Core Legacy Patcher](https://github.com/dortania/OpenCore-Legacy-Patcher "OCLP") (OCLP) to restore legacy graphics acceleration.
+| **Name**[^1] | Description
+| ------------ | -----------
+| **CPU**      | Intel Core i7-2640M
+| **RAM**      | 16 GB DDR3
+| **SSD**      | 512 GB
+| **Wi-Fi & Bluetooth** | Broadcom BCM94352HMB / Atheros AR9285
+| **USB 3.0**  | Realtek
+| **Card reader** | JMicron
+| **DVR-RW drive** | HP
+| **OpenCore** | [0.9.4-5afed6e](https://github.com/ubihazard/OpenCorePkg-ProBook/releases/tag/v0.9.4-5afed6e) (version for ProBook)
+| **OCLP** | 0.6.7
 
-You can also attempt installing Monterey if you manage to find and swap in a compatible Wi-Fi card for it. But Monterey is the final macOS release you can possibly install on this laptop, – and this is already stretching it quite too far. Ventura is *not* compatible because it requires AVX2 CPU instructions, which Sandy Bridge lacks support for.
+[^1]: Everything works. USB 3.0 and web cam might work only up to High Sierra. USB 2.0 and Bluetooth need proper [port mapping](#acpi-aka-dsdt-patching).
 
-A note on HD3000 issues
+Although this laptop is very old, macOS works surprisingly well on it with pretty much full compatibility. You can expect relatively smooth web browsing experience, word processing, and coding light projects in VS Code (nothing too demanding). Don‘t expect running XCode with iOS simulator on it though. It can also help you manage your iThings if you don‘t already have a Mac.
+
+Getting your laptop ready
+-------------------------
+
+Before you start, it is recommended that you consider upgrading your ProBook. All of its off-the-shelf configurations are hopelessly outdated by now, but thanks to its age most of components from that time are sold dirt cheap on used markets and Aliexpress.
+
+### SSD
+
+Definitely upgrade HDD to a minimum 256 GB SATA SSD drive (128 GB can be enough for very light use). Modern versions of macOS use APFS file system which is specifically designed for solid-state drives. Although you can install macOS on a HDD, the performance penalty would likely be too high.
+
+### CPU & RAM
+
+It is highly recommended that you install at least 8 GB of RAM (12 GB better) and change your processor to at least Core i5 with Turbo Boost (in case if you are stuck with Core i3). You would want to disassemble your laptop anyway to clean it and change thermal paste, so why not upgrade CPU in the process? My personal CPU recommendation, however, would be dual-core Core i7, namely [2.8 GHz 2640M](https://ark.intel.com/content/www/us/en/ark/products/53464/intel-core-i72640m-processor-4m-cache-up-to-3-50-ghz.html "Core i7-2640M") or 2.7 GHz 2620M (whichever you can still buy). I would advice against quad-core 2670QM and especially 2760QM or higher, and for many reasons. For one, your laptop‘s power adapter might not provide enough watts for the whole system. Then, ProBook‘s mainboards don‘t possess enough power phases to properly feed hungry quad-core i7 CPUs with TDP of 45+ W. Lastly, the cooling system is simply inadequate for a quad-core CPU: having just one short heat pipe.
+
+Failure to observe these hardware restrictions will result in your CPU quickly overheating, not having Turbo Boost or not running even at its stock advertised speed, VRM running very hot, and laptop abruptly shutting down.
+
+And on top of all that, even the fastest 45 W Core i7 CPU, – 2860QM, – is still whole 300 MHz slower on all cores than 35 W 2640M. Taking power and thermal limits into account, a 2640M with two but powerful cores is just a better overall option. This is especially true when compared to 2670QM with its miserable (by modern standards) 2.2 GHz stock clock speed.
+
+For reference, my dual-core Core i7-2640M with high-quality TIM applied hits **95** degrees under full continuous load (compilation of a big C/C++ project), – just a couple degrees shy of thermal-throttling.
+
+### Wi-Fi
+
+Depending on a version of macOS you would choose to install, you might also need to change your wireless adapter to a compatible one. This is not going to be easy because ProBook 4x30s suffers from a dreaded BIOS Wi-Fi whitelist. Luckily, there are workarounds. You can install a compatible Atheros card and rebrand it to pass whitelist check (BigSur), or you can try going for Broadcom BCM94352HMB (Monterey). The latter would require BIOS Wi-Fi whitelist [bypass hack](#broadcom-wi-fi) and a hardware mod on a card itself: you will need to mask certain PCB contacts with kapton tape to prevent HP firmware from turning the Wi-Fi module off. (Without this mod only Bluetooth side will work.)
+
+![BCM94352HMB Wi-Fi BIOS whitelist hardware hack](bcm94352hmb_hw_whitelist_hack.jpg)
+
+Chances are you already have a compatible Atheros AR9285 adapter so you can safely go with Big Sur.
+
+Alternatively, Intel Wi-Fi modules have recently became a viable option with [itlwm](https://github.com/OpenIntelWireless/itlwm "macOS Intel wireless kexts"). You can try making your Intel Wi-Fi work by copying itlwm kext(s) to EFI Kexts folder and adding them in OpenCore `config.plist`. Anyway, Intel Wi-Fi setup won‘t be covered here.
+
+Whatever your choice of card would be, it must be of *half-size mini PCIe* form factor, *not M2*.
+
+OpenCore for ProBook
+--------------------
+
+This guide now uses a [custom build](https://github.com/ubihazard/OpenCorePkg-ProBook/releases) of OpenCore put together by me. It includes two EFI modules made specifically for ProBook 4x30s: BIOS fan reset and BIOS Wi-Fi whitelist bypass.
+
+You can enable both with (`UEFI/Drivers`, `Enabled` -> `true`):
+
+```xml
+      <dict>
+        <key>Arguments</key>
+        <string></string>
+        <key>Comment</key>
+        <string>ProBookFanReset.efi</string>
+        <key>Enabled</key>
+        <true/>
+        <key>LoadEarly</key>
+        <false/>
+        <key>Path</key>
+        <string>ProBookFanReset.efi</string>
+      </dict>
+      <dict>
+        <key>Arguments</key>
+        <string></string>
+        <key>Comment</key>
+        <string>ProBookWifiWhlistOff.efi</string>
+        <key>Enabled</key>
+        <true/>
+        <key>LoadEarly</key>
+        <false/>
+        <key>Path</key>
+        <string>ProBookWifiWhlistOff.efi</string>
+      </dict>
+```
+
+**Do not use these EFI modules with any other laptop other than ProBook 4330s, 4530s, and 4730s. Doing so can brick your device!**
+
+`ProBookFanReset.efi` resets fan control from macOS back to automatic BIOS control. And `ProBookWifiWhlistOff.efi` is necessary if you plan to install a non-whitelisted (i.e. not approved by HP) Wi-Fi card in your laptop.
+
+ACPI (aka DSDT patching)
+------------------------
+
+Most ACPI patches for these laptop models (and EliteBooks / ZBooks) are from legendary @RehabMan.
+
+However, I wasn‘t able to make his “hot patch” SSDTs work with OpenCore. I don‘t know if it‘s because they were made with Clover in mind or if there‘s some other reason. Looking at their code, they appear to be rather complex and utilize custom `RMCF` “RehabMan configuration” device definition block. Regardless, SSDTs provided by Dortania in their [Sandy Bridge laptop guide](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/sandy-bridge.html "Sandy Bridge laptop guide") do happen to work just fine (but pay attention to `SSDT-PM`). Though I did carefully port the rest of ACPI patches from RehabMan‘s original Clover config to OpenCore config format.
+
+What‘s left is correct USB port mapping. The USB port map kexts from this repo are for ProBook 4530s models with USB 3.0 port. If you have a different mainboard (such as with all USB 2.0 ports) or if port mapping doesn‘t match for whatever other reason, you would have to re-map your USB ports by means of creating your own version of `USBMap.kext`.
+
+This procedure is fully covered in Dortania‘s [guide](https://dortania.github.io/OpenCore-Post-Install/usb/ "USB port mapping guide") and I won‘t be duplicating it here.
+
+Kernel extensions (aka “Kexts”)
+-------------------------------
+
+Kernel extensions, or “kexts” (“kernel modules” in Linux, “drivers” in Windows), are required for proper hardware support by macOS. There isn‘t much more to say: all required kexts are already assembled in one place in this repository. Though you might need to disable some and enable others to adjust for your particular system (`Kernel/Add`).
+
+### Atheros Wi-Fi
+
+Enable `Mojave/IOath3kfrmwr.kext`, `IOath3kfrmwr.kext`, `IOath3kdevice.kext`, `HS80211Family.kext`, `AirPortAtheros40.kext`, `ProBookAtheros.kext`, and `WifiLocFix.kext` (`Enabled` -> `true`).
+
+```xml
+      <dict>
+        <key>Arch</key>
+        <string>Any</string>
+        <key>BundlePath</key>
+        <string>AirPortAtheros40.kext</string>
+        <key>Comment</key>
+        <string>AirPortAtheros40.kext</string>
+        <key>Enabled</key>
+        <true/>
+        <key>ExecutablePath</key>
+        <string>Contents/MacOS/AirPortAtheros40</string>
+        <key>MaxKernel</key>
+        <string>20.9.9</string>
+        <key>MinKernel</key>
+        <string>18.0.0</string>
+        <key>PlistPath</key>
+        <string>Contents/Info.plist</string>
+      </dict>
+```
+
+Disable `AirportBrcmFixup.kext` (and its plugins), `BlueToolFixup.kext`, `BrcmBluetoothInjector.kext`, `BrcmFirmwareData.kext`, `BrcmPatchRAM3.kext`, and `BrcmPatchRAM2.kext` (`Enabled` -> `false`).
+
+```xml
+      <dict>
+        <key>Arch</key>
+        <string>Any</string>
+        <key>BundlePath</key>
+        <string>AirportBrcmFixup.kext</string>
+        <key>Comment</key>
+        <string>AirportBrcmFixup.kext</string>
+        <key>Enabled</key>
+        <false/>
+        <key>ExecutablePath</key>
+        <string>Contents/MacOS/AirportBrcmFixup</string>
+        <key>MaxKernel</key>
+        <string></string>
+        <key>MinKernel</key>
+        <string></string>
+        <key>PlistPath</key>
+        <string>Contents/Info.plist</string>
+      </dict>
+```
+
+Open `WifiLocFix.kext/Contents/Info.plist` and change the country code (`US`) and locale (`FCC` or `ETSI`):
+
+```xml
+      <dict>
+        <key>IO80211CountryCode</key>
+        <string>US</string>
+        <key>IO80211Locale</key>
+        <string>FCC</string>
+      </dict>
+```
+
+### Broadcom Wi-Fi
+
+Do the other way around. Add Broadcom configuration parameters to OpenCore `config.plist` `boot-args` with your country code (`NVRAM/Add/7C436110-AB2A-4BBB-A880-FE41995C9F82`):
+
+```xml
+        <key>boot-args</key>
+        <string>-no_compat_check amfi_get_out_of_my_way=1 brcmfx-driver=2 brcmfx-country=US</string>
+```
+
+**For ProBook 4x30s series only:** enable Wi-Fi BIOS whitelist bypass EFI driver in `UEFI/Drivers` (`Enabled` -> `true`):
+
+```xml
+      <dict>
+        <key>Arguments</key>
+        <string></string>
+        <key>Comment</key>
+        <string>ProBookWifiWhlistOff.efi</string>
+        <key>Enabled</key>
+        <true/>
+        <key>LoadEarly</key>
+        <false/>
+        <key>Path</key>
+        <string>ProBookWifiWhlistOff.efi</string>
+      </dict>
+```
+
+*Do not use this driver with any other laptop: doing so can brick your device!*
+
+You might also need to add `SSDT-ARPT-RP0X-BCM4352.aml` to your EFI ACPI folder and `config.plist` for native Airport to work. You can get it from @toleda [wireless half-mini repo](https://github.com/toleda/wireless_half-mini/tree/master/ssdt_arpt "Airport BCM4352 SSDT"): follow instructions on the linked page to find out which one you need (`ACPI/Add`, `Enabled` -> `true`).
+
+```xml
+      <dict>
+        <key>Comment</key>
+        <string>SSDT-ARPT-RP04-4352.aml</string>
+        <key>Enabled</key>
+        <true/>
+        <key>Path</key>
+        <string>SSDT-ARPT-RP04-4352.aml</string>
+      </dict>
+```
+
+### Intel Wi-Fi
+
+Sorry, you are on your own here.
+
+What macOS version to install
+-----------------------------
+
+The recommended macOS version(s) to install is ~Sierra~ High Sierra together with Big Sur. High Sierra is the last version of macOS with native support for Intel HD3000 graphics and Atheros Wi-Fi. And Big Sur is just modern enough for everyday use (sans Metal acceleration), although it requires additional patched kexts to recover removed functionality. Having them both installed side-by-side would offer best of both worlds: use whatever you can on High Sierra and hop onto Big Sur for incompatible apps, such as modern browser. Definitely go with just Big Sur alone if you can‘t afford enough storage space for both.
+
+Mojave and Catalina (especially Catalina) is *not recommended*. They aren‘t supported well by the OpenCore Legacy Patcher (OCLP), which is used to restore legacy HD3000 graphics acceleration, and Catalina in particular was released at a time when Hackintosh community was transitioning from Clover to OpenCore. As a result, it suffers form likewise poor support form both Clover and OpenCore. (This is on top of being buggy and problematic even on real Macs.)
+
+But can it run Monterey?
+------------------------
+
+if you managed to find and swapped in a compatible Wi-Fi card, you can bump installed macOS version to Monterey. The caveat is that support for Bluetooth on these cards (any compatible card you can install in this laptop) on Monterey is sketchy at best: Airdrop, Handoff, and certain Continuity features might not work at all, would work but with issues, or only in one direction (from iPhone to ProBook, but not the other way around). So keep that in mind.
+
+Installing macOS Ventura
+------------------------
+
+macOS Ventura requires a CPU with AVX2 instructions which all Sandy Bridge CPUs lack. (AVX2 becomes available since Haswell.) Thus, Monterey is the final version of macOS you can normally install on this laptop. That is, unless you are willing to go down the rabbit hole of [Cryptex](https://github.com/acidanthera/CryptexFixup) patching.
+
+This isn‘t supported by this guide and is highly *not recommended*. Even if you manage to boot Ventura and use apps that directly come with it, pretty much any third-party app designed to run on Ventura would expect AVX2 to be available and as such won‘t be usable on your system.
+
+So this remains an option only for maniacs willing to accomplish just this task of “successfully” running Ventura on an unsupported Sandy Bridge system, – for bragging rights.
+
+Installing macOS Sonoma
 -----------------------
 
-Even with 8GB of system RAM the Intel GPU on this laptop model is plagued by random graphical glitches, which manifest in grey blocks suddenly popping around, messed up visuals, and most annoyingly, the system eventually freezes and becomes completely unresponsive (except mouse cursor still moving on the screen).
+Please. Stop.
 
-What worked for me to drastically reduce it is calculating the correct KASLR slide value according to this [guide](https://dortania.github.io/OpenCore-Install-Guide/extras/kaslr-fix.html "KASLR slide guide"). In my case the slide value resulted in **8**, which is set in the `config.plist`:
+Separate config for installer
+-----------------------------
 
-```xml
-<key>boot-args</key>
-<string>-no_compat_check amfi_get_out_of_my_way=1 slide=8</string>
-```
+For USB installer you will need a different OpenCore `config.plist` modified specifically for installing macOS. It disables some kexts which are useless during installation (Wi-Fi, Bluetooth, card reader, etc.), doesn’t modify SIP flags, enables verbose boot (kernel text messages), and has a different SMBIOS Mac model identifier which allows to install ~Big Sur~ Monterey.
 
-Your value might be different, so if the system panics and doesn’t boot, try calculating it according to the guide linked above and change it accordingly in the `config.plist`.
+Grab it [directly](config.plist "USB installer OpenCore config") from this repository (not from releases page).
 
-This seems to work in Sierra, and the laptop no longer locks up, but sadly doesn’t help Big Sur much.
+Disabling dedicated GPU
+-----------------------
 
-HD3000 VRAM patch
------------------
-
-With HD3000 it is possible to change the maximum amount of video ram macOS can allocate from system. The patches are available for macOS Sierra+ and can be enabled via OpenCore’s `config.plist`. Additionally, the `AppleIntelHD3000Graphics` kext `Contents/Info.plist` has to be modified for patch to be complete:
+For laptop models with dedicated GPU soldered onto motherboard an additional `-wegnoegpu` boot argument is needed in `config.plist`:
 
 ```xml
-<key>VRAMOverride</key>
-<integer>768</integer>
+        <key>boot-args</key>
+        <string>-no_compat_check amfi_get_out_of_my_way=1 -wegnoegpu</string>
 ```
 
-The OC `config.plist` patch doesn’t seem to work on Big Sur with OCLP-installed HD3000 kexts. Instead, the `AppleIntelSNBGraphicsFB` (“Sandy Bridge graphics”) kext has to be [modified directly](https://github.com/ubihazard/macos-scripts/tree/main/Scripts#root-patching "Patch guide") with the help of binary hexadecimal editor. And the VRAM size value in `AppleIntelHD3000Graphics`’s `Info.plist` is also different:
+This causes all dedicated (or “external”) GPUs to be disabled.
+
+Restoring graphics acceleration and a note on Metal support
+-----------------------------------------------------------
+
+One of the first [post-installation](https://dortania.github.io/OpenCore-Post-Install/ "Post-installation guide") tasks you will have to perform, unless you decided to stay on High Sierra, is restoring graphics acceleration along with native desktop resolution.
+
+Intel HD3000 doesn‘t support Metal graphics acceleration API found on modern macOS since High Sierra. And since Mojave, HD3000 itself isn‘t supported at all: you need to use [OpenCore Legacy Patcher](https://github.com/dortania/OpenCore-Legacy-Patcher "OCLP") to install patched kexts that restore graphics acceleration and work-around Metal requirements in the system.
+
+Applications that require Metal can be replaced with their older non-Metal versions. Usually they work on Big Sur just fine.
+
+Restoring power management
+--------------------------
+
+After installing macOS, copying the provided EFI folder to your EFI system partition for booting without a USB drive, and after fixing graphics, the next step is configuring proper CPU power management in the form of a `SSDT-PM` SSDT table. This table is specific to each CPU and cannot be pre-made.
+
+Without this step `AppleIntelCPUPowerManagement.kext` would cause kernel panic so `NullCPUPowerManagement.kext` is temporarily used to overtake control from it.
+
+  * Follow the Dortania [guide](https://dortania.github.io/OpenCore-Post-Install/universal/pm.html#sandy-and-ivy-bridge-power-management) to create `SSDT-PM.aml` for the CPU installed in your laptop.
+
+  * Mount your EFI system partition:
+
+    ```bash
+    diskutil list
+    sudo diskutil mount diskXsY
+    ```
+
+    (Replace `X` and `Y` with your EFI disk identifier.)
+
+  * Copy the `ssdt.aml` generated by `ssdtPRGen.sh` script to your EFI:
+
+    ```bash
+    cp ~/Library/ssdtPRGen/ssdt.aml /Volumes/EFI/EFI/OC/ACPI/SSDT-PM.aml
+    ```
+
+  * Re-enable CPU power management in OpenCore `config.plist` (`ACPI/Add`, `Enabled` -> `true`):
+
+    ```xml
+          <dict>
+            <key>Comment</key>
+            <string>SSDT-PM.aml</string>
+            <key>Enabled</key>
+            <true/>
+            <key>Path</key>
+            <string>SSDT-PM.aml</string>
+          </dict>
+    ```
+
+  * Restore OEM CPU tables (`ACPI/Delete`, `Enabled` -> `false`):
+
+    ```xml
+          <key>Delete</key>
+          <array>
+            <dict>
+              <key>All</key>
+              <false/>
+              <key>Comment</key>
+              <string>Delete CpuPm</string>
+              <key>Enabled</key>
+              <false/>
+              <key>OemTableId</key>
+              <data>Q3B1UG0AAAA=</data>
+              <key>TableLength</key>
+              <integer>0</integer>
+              <key>TableSignature</key>
+              <data>U1NEVA==</data>
+            </dict>
+            <dict>
+              <key>All</key>
+              <false/>
+              <key>Comment</key>
+              <string>Delete Cpu0Ist</string>
+              <key>Enabled</key>
+              <false/>
+              <key>OemTableId</key>
+              <data>Q3B1MElzdAA=</data>
+              <key>TableLength</key>
+              <integer>0</integer>
+              <key>TableSignature</key>
+              <data>U1NEVA==</data>
+            </dict>
+          </array>
+    ```
+
+  * Disable `NullCPUPowerManagement.kext` (`Kernel/Add`, `Enabled` -> `false`):
+
+    ```xml
+          <dict>
+            <key>Arch</key>
+            <string>Any</string>
+            <key>BundlePath</key>
+            <string>NullCPUPowerManagement.kext</string>
+            <key>Comment</key>
+            <string>NullCPUPowerManagement.kext</string>
+            <key>Enabled</key>
+            <false/>
+            <key>ExecutablePath</key>
+            <string>Contents/MacOS/NullCPUPowerManagement</string>
+            <key>MaxKernel</key>
+            <string></string>
+            <key>MinKernel</key>
+            <string></string>
+            <key>PlistPath</key>
+            <string>Contents/Info.plist</string>
+          </dict>
+    ```
+
+Fixing blur effects in Big Sur and Monterey
+-------------------------------------------
+
+In Big Sur (and later) transparent effects, such as blur, render incorrectly on non-Metal GPUs (HD3000 is not capable of Metal API). After installing [patched graphics kexts](#restoring-graphics-acceleration-and-a-note-on-metal-support) with OCLP it becomes possible to fall back to legacy blur drawing method:
+
+```bash
+defaults write -g Moraea_BlurBeta -bool true
+```
+
+You might also experiment with different blur strength, style of dark window borders, and dark menu bar text:
+
+```bash
+defaults write -g ASB_BlurOverride -float 30
+defaults write -g Moraea_RimBeta -bool true
+defaults write -g Moraea_DarkMenuBar -bool true
+```
+
+(I would recommend leaving them with their default values.)
+
+In Monterey you can get noticeable performance improvement by enabling reduced transparency mode in Accessibility settings. (This mode is broken on BigSir with patched kexts, rendering the menu bar unusable.) With this on, you can now selectively re-enable transparency and blur for the dock:
+
+```bash
+defaults write com.apple.dock Moraea_EnableTransparency 1
+```
+
+Log out and log back in to see the changes.
+
+HD3000 graphical glitches
+-------------------------
+
+Intel HD3000 on non-Apple hardware is known to be plagued by graphical artifacts. They can occur even with 8 GB of RAM installed and are manifested in the form of grey lines or blocks suddenly popping around. Most annoyingly, the system eventually freezes and becomes completely unresponsive, except mouse cursor still moving on the screen.
+
+The solution to this problem turns out to be quite simple: perform an EC reset (“EC” stands for “embedded controller”) and *do not boot into anything other than macOS*: no Windows, no Linux live USBs, etc.
+
+An EC reset is performed by disconnecting your laptop from all power sources (AC adapter and battery) and pressing and holding the power button for 30 seconds. Make sure to hold the button for no less than 30 seconds. If in doubt, hold it for several seconds longer, – it won‘t hurt.
+
+Apparently, there‘s something low-level going on in the code that handles the platform and it messes up with EC in a way that is incompatible between operating systems. I.e. macOS “configures” it in its own way and this results in glitches now happening on, for example, Ubuntu, – and the other way around.
+
+This means dual-booting Linux or Windows with macOS on this laptop is *not an option*.
+
+Increasing HD3000 VRAM
+----------------------
+
+With HD3000 it is possible to change the maximum amount of video ram macOS allocates for the GPU.
+
+You can either enable the patches in `config.plist` or apply them manually. Additionally, the `AppleIntelHD3000Graphics` kext `Contents/Info.plist` has to be [modified](https://github.com/ubihazard/macos-scripts/tree/main/Scripts#root-patching "Root patching guide") for patch to be complete:
 
 ```xml
-<key>VRAMOverride</key>
-<integer>1536</integer>
+      <key>VRAMOverride</key>
+      <integer>1536</integer>
 ```
 
-Don’t forget to [rebuild the kernel cache](https://github.com/ubihazard/macos-scripts/tree/main/Scripts#rebuild-kernel-cache) after you are done patching `AppleIntelHD3000Graphics`.
+The OC `config.plist` patch doesn’t seem to work on Big Sur with OCLP-installed HD3000 kexts. Instead, the `AppleIntelSNBGraphicsFB.kext` (“Sandy Bridge graphics”) has to be [modified directly](https://github.com/ubihazard/macos-scripts/tree/main/Scripts#root-patching "Root patching guide") with the help of binary hexadecimal editor.
+
+If you got 8 GB of system RAM:
+
+| **VRAM size** | Hex find   | Hex replace | Base64 find | Base64 replace
+| ------------- | ---------- | ----------- | ----------- | --------------
+| **768**       | d000000020 | d000000030  | 0AAAACA=    | 0AAAADA=
+| **1024**      | d000000020 | d000000040  | 0AAAACA=    | 0AAAAEA=
+| **1536**      | d000000020 | d000000060  | 0AAAACA=    | 0AAAAGA=
+
+For 4 GB of system RAM (not recommended):
+
+| **VRAM size** | Hex find   | Hex replace | Base64 find | Base64 replace
+| ------------- | ---------- | ----------- | ----------- | --------------
+| **512**       | d000000018 | d000000020  | 0AAAABg=    | 0AAAACA=
+| **768**       | d000000018 | d000000030  | 0AAAABg=    | 0AAAADA=
+| **1024**      | d000000018 | d000000040  | 0AAAABg=    | 0AAAAEA=
+
+The provided values are for High Sierra version of the kext. Sierra and below have [different values](https://web.archive.org/web/20201112022015/https://www.insanelymac.com/forum/topic/320001-increase-vram-hd-3000/ "Sierra HD3000 VRAM patching").
+
+Don’t forget to [rebuild the kernel cache](https://github.com/ubihazard/macos-scripts/tree/main/Scripts#rebuild-kernel-cache "Kernel cache rebuild guide") after the patch and then reboot to test your changes.
 
 Brightness adjustment after EDID injection
 ------------------------------------------
 
-If you inject custom EDID for your internal display you will notice that `Fn` brightness adjustment keys will no longer function and the brightness slider in Big Sur would also show up as disabled in control center area. The reason for this is that in case of custom EDID injection macOS insists on having a particular value in device id field of your EDID. You can use the [edidparser.rb](https://github.com/ubihazard/probook-4530s/releases/download/v1.0/edidparser.rb) script which would extract your current EDID and patch it for brightness keys to work again. This script isn’t my work and is provided as-is.
+If you inject custom EDID for your internal display you will notice that `Fn` brightness adjustment keys will no longer function and the brightness slider in Big Sur would also show up as disabled in control center area. The reason for this is that in case of custom EDID injection macOS insists on having a particular value in device id field of your EDID. You can use the [edidparser.rb](https://github.com/ubihazard/probook-4x30s/releases/download/v1.0/edidparser.rb "Custom EDID fix") script which would extract your current EDID and patch it for brightness keys to work again. This script isn’t my work and is provided as-is.
 
 Configuring trackpad
 --------------------
@@ -79,54 +470,111 @@ Finally, replace the original file with your edited copy:
 cp com.apple.AppleMultitouchTrackpad.plist ~/Library/Preferences/
 ```
 
-*You must log out and log in back for changes to apply.* A reboot is not needed.
+*You must log out and log in back for changes to apply. A reboot is not needed.*
 
-A pre-made trackpad configuration file with tap to click is [provided](Library/Preferences/com.apple.AppleMultitouchTrackpad.plist "Trackpad config") and should suit most users. Copy it to `~/Library/Preferences` replacing the original.
+A pre-made trackpad configuration file with tap to click is [provided](Library/Preferences/com.apple.AppleMultitouchTrackpad.plist "Trackpad config") and should suit most users well. Copy it to `~/Library/Preferences` replacing the original.
 
-Separate config for installer
------------------------------
+Calculating KASLR value
+-----------------------
 
-For USB installer you would need a different OpenCore `config.plist` modified specifically for installing macOS. It disables some kexts which are useless during installation (Wi-Fi, bluetooth, card reader, etc.), doesn’t modify SIP flags, enables verbose boot (with kernel text messages), and has a different SMBIOS mac model identifier which allows to install Big Sur.
+If you system fails to boot for no apparent reason with messages like:
 
-Grab it [directly](config.plist "USB installer OpenCode config") from this repository (not from releases page).
-
-Post-install
-------------
-
-Don’t forget to fill in your own SMBIOS information (board serial, system UUID, etc.) after successful installation.
-
-Follow a [guide](https://github.com/Marcuriee/Hackintosh-Guide/blob/main/configuring-smbios.md "Generate SMBIOS") to make a correct SMBIOS for your hackintosh laptop.
-
-Fixing transparency effects in Big Sur
---------------------------------------
-
-In Big Sur (and later) transparent effects, such as blur, render incorrectly on non-Metal GPUs (HD3000 is not capable of Metal API). Luckily, a fix is available, forcing rendering of such effects using legacy method, which doesn’t require Metal support:
-
-```bash
-defaults write -g Moraea_BlurBeta -bool true
+```
+Error allocating 0x1197b pages at 0x0000000017a80000 alloc type 2
+Couldn't allocate runtime area
 ```
 
-You might also experiment with different blur strength `ASB_BlurOverride`, style of dark window borders `Moraea_RimBeta`, and dark menu bar text `Moraea_DarkMenuBar`:
+KASLR (kernel address space layout randomization) might be a problem.
+
+To fix this you can either use one of the [AptioMemoryFix](https://github.com/acidanthera/AptioFixPkg) drivers or set `DevirtualiseMmio` to `true` and [manually calculate](https://dortania.github.io/OpenCore-Install-Guide/extras/kaslr-fix.html "KASLR slide guide") the slide value.
+
+In my case the slide value resulted in **8**, which is set in the `config.plist` (`NVRAM/Add/7C436110-AB2A-4BBB-A880-FE41995C9F82`):
+
+```xml
+        <key>boot-args</key>
+        <string>-no_compat_check amfi_get_out_of_my_way=1 slide=8</string>
+```
+
+Disabling SIP
+-------------
+
+Due to extensive modifications required to support this laptop on modern macOS it is better to disable SIP right away (`NVRAM/Add/7C436110-AB2A-4BBB-A880-FE41995C9F82`):
+
+```xml
+        <key>csr-active-config</key>
+        <data>Awg=</data>
+```
+
+(The value configured is `0x803`.)
+
+Filling your system information
+-------------------------------
+
+The final step to setting up your new hackintosh laptop is generating serial numbers and system UUID. You can skip this step if you don‘t plan to use App store or connect with Apple, otherwise it is required to make iCloud or iMessage to work.
+
+First, you need to choose the Mac product name closest to your hardware. For this laptop model it would be `MacBookPro8,1`. Now you can use `macserial` tool from OpenCore utilities (`OpenCorePkg/Utilities`) to generate serials (`SystemSerialNumber` and `MLB`):
 
 ```bash
-defaults write -g ASB_BlurOverride -float 30
-defaults write -g Moraea_RimBeta -bool false
-defaults write -g Moraea_DarkMenuBar -bool false
+macserial -m 'MacBookPro8,1' -n 1
 ```
+
+Next, find out your ethernet MAC address (this would be your `ROM` identifier):
+
+```bash
+ifconfig
+```
+
+Finally, generate the `SystemUUID` for your ProBook:
+
+```bash
+uuidgen
+```
+
+Now we can fill the information in `config.plist` (`PlatformInfo/Generic`):
+
+```xml
+    <key>Generic</key>
+    <dict>
+      <key>AdviseFeatures</key>
+      <false/>
+      <key>MLB</key>
+      <string>W8900000000000000</string>
+      <key>MaxBIOSVersion</key>
+      <false/>
+      <key>ProcessorType</key>
+      <integer>0</integer>
+      <key>ROM</key>
+      <data>AABBCCXXYYZZ</data>
+      <key>SpoofVendor</key>
+      <true/>
+      <key>SystemMemoryStatus</key>
+      <string>Auto</string>
+      <key>SystemProductName</key>
+      <string>MacBookPro8,1</string>
+      <key>SystemSerialNumber</key>
+      <string>W89000000000</string>
+      <key>SystemUUID</key>
+      <string>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</string>
+    </dict>
+```
+
+(`MLB` stands for “motherboard serial number”.)
 
 Clover fallback
 ---------------
 
-The provided EFI folder also contains a copy of Clover bootloader in case if you have trouble getting OpenCore to work. The included Clover version has only been tested with macOS Sierra and High Sierra, and it definitely won’t be able to boot Big Sur.
+There‘s a legacy Clover bootloader [EFI folder](https://github.com/ubihazard/probook-4x30s/releases/download/v1.0/EFI-Clover.7z "Download") provided just in case if you have trouble getting OpenCore to work. The included Clover version has only been tested with macOS Sierra and High Sierra with Atheros Wi-Fi, and it definitely won’t be able to boot Big Sur.
 
-Note, however, that Clover and OpenCore don’t mix well together. In my experience, a NVRAM reset is required when switching from Clover to OpenCore, at least in case of High Sierra, or the kernel would panic with weird error message. The NVRAM reset can be performed from OpenCore boot screen: press space if you don’t see its menu entry.
+You will still need to generate `SSDT-PM.aml` for your CPU and replace the one in `CLOVER/ACPI/patched`. So remove it and temporarily move `NullCPUPowerManagement.kext` from `CLOVER/kexts/Disabled` to `CLOVER/kexts/Other` to get macOS to boot so you can [run](#restoring-power-management) `ssdtPRGen.sh`.
+
+Note that Clover and OpenCore don’t mix well together. In my experience, a NVRAM reset is required when switching from Clover to OpenCore, or the kernel might panic with weird error message. The NVRAM reset can be performed from OpenCore boot screen: press space to reveal its menu entry.
 
 Credits
 -------
 
-All credits go to [Acidanthera team](https://github.com/acidanthera), [RehabMan](https://github.com/RehabMan), [dortania](https://github.com/dortania), and the rest of talented individuals who worked hard to make running macOS on regular PCs and unsupported hardware a reality.
+All credits go to @RehabMan, @toleda, @acidanthera, @dortania, @moraea, and the rest of talented individuals who worked hard to make running macOS on regular PCs and unsupported hardware a reality.
 
 ⭐ Support
 ---------
 
-If you find anything of this useful, you can [buy me a ☕](https://www.buymeacoffee.com/ubihazard "Donate")!
+If you find this guide useful, you can [buy me a ☕](https://www.buymeacoffee.com/ubihazard "Donate")!
