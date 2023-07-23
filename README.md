@@ -96,7 +96,7 @@ You can enable both with (`UEFI/Drivers`, `Enabled` -> `true`):
 ACPI (aka DSDT patching)
 ------------------------
 
-Most ACPI patches for these laptop models (and EliteBooks / ZBooks) are from legendary @RehabMan.
+Most ACPI patches for these laptop models (and EliteBooks / ZBooks) are from legendary [RehabMan](https://github.com/RehabMan).
 
 However, I wasn‘t able to make his “hot patch” SSDTs work with OpenCore. I don‘t know if it‘s because they were made with Clover in mind or if there‘s some other reason. Looking at their code, they appear to be rather complex and utilize custom `RMCF` “RehabMan configuration” device definition block. Regardless, SSDTs provided by Dortania in their [Sandy Bridge laptop guide](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/sandy-bridge.html "Sandy Bridge laptop guide") do happen to work just fine (but pay attention to `SSDT-PM`). Though I did carefully port the rest of ACPI patches from RehabMan‘s original Clover config to OpenCore config format.
 
@@ -196,7 +196,7 @@ Do the other way around. Add Broadcom configuration parameters to OpenCore `conf
 
 *Do not use this driver with any other laptop: doing so can brick your device!*
 
-You might also need to add `SSDT-ARPT-RP0X-BCM4352.aml` to your EFI ACPI folder and `config.plist` for native Airport to work. You can get it from @toleda [wireless half-mini repo](https://github.com/toleda/wireless_half-mini/tree/master/ssdt_arpt "Airport BCM4352 SSDT"): follow instructions on the linked page to find out which one you need (`ACPI/Add`, `Enabled` -> `true`).
+You might also need to add `SSDT-ARPT-RP0X-BCM4352.aml` to your EFI ACPI folder and `config.plist` for native Airport to work. You can get it from [toleda](https://github.com/toleda) [wireless half-mini repo](https://github.com/toleda/wireless_half-mini/tree/master/ssdt_arpt "Airport BCM4352 SSDT"): follow instructions on the linked page to find out which one you need (`ACPI/Add`, `Enabled` -> `true`).
 
 ```xml
       <dict>
@@ -572,7 +572,7 @@ Note that Clover and OpenCore don’t mix well together. In my experience, a NVR
 Credits
 -------
 
-All credits go to @RehabMan, @toleda, @acidanthera, @dortania, @moraea, and the rest of talented individuals who worked hard to make running macOS on regular PCs and unsupported hardware a reality.
+All credits go to [RehabMan](https://github.com/RehabMan), [toleda](https://github.com/toleda), [acidanthera](https://github.com/acidanthera), [dortania](https://github.com/dortania), [moraea](https://github.com/moraea), and the rest of talented individuals who worked hard to make running macOS on regular PCs and unsupported hardware a reality.
 
 ⭐ Support
 ---------
