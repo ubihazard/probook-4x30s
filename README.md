@@ -91,7 +91,7 @@ You can enable both with (`UEFI/Drivers`, `Enabled` -> `true`):
 
 **Do not use these EFI modules with any other laptop other than ProBook 4330s, 4530s, and 4730s. Doing so can brick your device!**
 
-`ProBookFanReset.efi` resets fan control from macOS back to automatic BIOS control. And `ProBookWifiWhlistOff.efi` is necessary if you plan to install a non-whitelisted (i.e. not approved by HP) Wi-Fi card in your laptop.
+`ProBookFanReset.efi` resets fan control from macOS back to automatic BIOS control. `ProBookWifiWhlistOff.efi` is necessary if you plan to install a non-whitelisted (i.e. not approved by HP) Wi-Fi card in your laptop.
 
 ACPI (aka DSDT patching)
 ------------------------
