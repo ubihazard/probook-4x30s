@@ -6,7 +6,7 @@ I have a very old Hewlett-Packard laptop: [HP ProBook 4530s](https://support.hp.
 
 ![macOS Installed on a ProBook 4530s](about-this-probook.png)
 
-This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-Guide/ "OpenCore bootloader install guide") [EFI folder](https://github.com/ubihazard/probook-4x30s/releases/download/v1.1/EFI-0.9.4-5afed6e.7z "Download") with everything needed to run modern versions of [macOS](https://support.apple.com/macos) on old HP ProBook 4x30s series Sandy Bridge laptops: with little [adjustments](#restoring-power-management) for your particular laptop. Only models with integrated Intel HD3000 graphics are supported. Other models, such as with AMD GPUs, will require additional steps to [turn their dedicated GPU off](https://github.com/acidanthera/WhateverGreen "WhateverGreen configuration") since it likely isn‘t supported by macOS.
+This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-Guide/ "OpenCore bootloader install guide") [EFI folder](https://github.com/ubihazard/probook-4x30s/releases/download/v1.1/EFI-0.9.4-5afed6e.7z "Download") with everything needed to run modern versions of [macOS](https://support.apple.com/macos) on old HP ProBook 4x30s series Sandy Bridge laptops: with little [adjustments](#restoring-power-management) for your particular laptop. Only models with integrated Intel HD3000 graphics are supported. Other models, such as with AMD GPUs, will require additional steps to [turn their dedicated GPU off](#disabling-dedicated-gpu) since it likely isn‘t supported by macOS.
 
 | **Name**[^1] | Description
 | ------------ | -----------
@@ -247,14 +247,14 @@ Grab it [directly](config.plist "USB installer OpenCore config") from this repos
 Disabling dedicated GPU
 -----------------------
 
-For laptop models with dedicated GPU soldered onto motherboard an additional `-wegnoegpu` boot argument is needed in `config.plist`:
+For laptop models with dedicated GPU soldered onto motherboard an additional `-wegnoegpu` [boot argument](https://github.com/acidanthera/WhateverGreen "WhateverGreen configuration") is needed in `config.plist`:
 
 ```xml
         <key>boot-args</key>
         <string>-no_compat_check amfi_get_out_of_my_way=1 -wegnoegpu</string>
 ```
 
-This causes all dedicated (or “external”) GPUs to be disabled.
+This causes all dedicated (or “external”) GPUs to be disabled. Make sure to also disable your dGPU in BIOS.
 
 Restoring graphics acceleration and a note on Metal support
 -----------------------------------------------------------
@@ -503,7 +503,7 @@ Due to extensive modifications required to support this laptop on modern macOS i
         <data>Awg=</data>
 ```
 
-(The value configured is `0x803`.)
+(The configured value is `0x803`.)
 
 Filling your system information
 -------------------------------
