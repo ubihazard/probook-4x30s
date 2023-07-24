@@ -516,7 +516,7 @@ First, you need to choose the Mac product name closest to your hardware. For thi
 macserial -m 'MacBookPro8,1' -n 1
 ```
 
-Next, find out your ethernet MAC address (this would be your `ROM` identifier):
+Next, find out your ethernet adapter MAC address and strip it of `:` characters (this would be your `ROM`):
 
 ```bash
 ifconfig
