@@ -27,7 +27,7 @@ Although this laptop is very old, macOS works surprisingly well on it with prett
 Getting your laptop ready
 -------------------------
 
-Before you start it is recommended that you consider upgrading your ProBook. All of its off-the-shelf configurations are hopelessly outdated by now, but thanks to its age most of components from that time are sold dirt cheap on used markets and Aliexpress.
+Before you start it is recommended that you consider upgrading your ProBook. All of its off-the-shelf configurations are hopelessly outdated by now, but thanks to its age most components from that time are sold dirt cheap on used markets and Aliexpress.
 
 ### SSD
 
