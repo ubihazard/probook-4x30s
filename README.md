@@ -56,40 +56,11 @@ Whatever your choice of card would be, it must be of *half-size mini PCIe* form 
 OpenCore for ProBook
 --------------------
 
-This guide now uses a [custom build](https://github.com/ubihazard/OpenCorePkg-ProBook/releases) of OpenCore put together by me. It includes two EFI modules made specifically for ProBook 4x30s: BIOS fan reset and BIOS Wi-Fi whitelist bypass.
-
-You can enable both with (`UEFI/Drivers`, `Enabled` -> `true`):
-
-```xml
-      <dict>
-        <key>Arguments</key>
-        <string></string>
-        <key>Comment</key>
-        <string>ProBookFanReset.efi</string>
-        <key>Enabled</key>
-        <true/>
-        <key>LoadEarly</key>
-        <false/>
-        <key>Path</key>
-        <string>ProBookFanReset.efi</string>
-      </dict>
-      <dict>
-        <key>Arguments</key>
-        <string></string>
-        <key>Comment</key>
-        <string>ProBookWifiWhlistOff.efi</string>
-        <key>Enabled</key>
-        <true/>
-        <key>LoadEarly</key>
-        <false/>
-        <key>Path</key>
-        <string>ProBookWifiWhlistOff.efi</string>
-      </dict>
-```
+This guide now uses a [custom build](https://github.com/ubihazard/OpenCorePkg-ProBook/releases) of OpenCore put together by me. It includes two EFI modules made specifically for ProBook 4x30s: ~BIOS fan reset~ *(do not use – this module causes HD 3000 graphical artifacts)* and BIOS Wi-Fi whitelist bypass.
 
 **Do not use these EFI modules with any other laptop other than ProBook 4330s, 4530s, or 4730s. Doing so can brick your device!**
 
-`ProBookFanReset.efi` resets fan control from macOS back to automatic BIOS control. `ProBookWifiWhlistOff.efi` is necessary if you plan to install a non-whitelisted (i.e. not approved by HP) Wi-Fi card in your laptop.
+~`ProBookFanReset.efi` resets fan control from macOS back to automatic BIOS control.~ `ProBookWifiWhlistOff.efi` is necessary if you [plan to install](#wi-fi) a non-whitelisted (i.e. not approved by HP) Wi-Fi card in your laptop.
 
 ACPI (aka DSDT patching)
 ------------------------
