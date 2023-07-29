@@ -70,7 +70,7 @@ Most [ACPI patches](https://github.com/RehabMan/HP-ProBook-4x30s-DSDT-Patch) for
 
 However, I wasn‘t able to make his “hot patch” SSDTs work with OpenCore. I don‘t know if it‘s because they were made with Clover in mind or if there‘s some other reason. Looking at their code, they appear to be rather complex and utilize custom `RMCF` “RehabMan configuration” device definition block. Regardless, SSDTs provided by Dortania in their [Sandy Bridge laptop guide](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/sandy-bridge.html "Sandy Bridge laptop guide") do happen to work just fine, – but pay attention to `SSDT-PM`. Though I did carefully port the rest of ACPI patches from RehabMan‘s original Clover config to OpenCore config format.
 
-What‘s left is correct USB port mapping. The USB port map kexts in this repo are for ProBook 4530s models with USB 3.0 port. If you have a different mainboard (such as with all USB 2.0 ports) or if port mapping doesn‘t match for some other reason, you would have to re-map your USB ports by means of creating your own version of `USBMap.kext`. This procedure is fully covered in Dortania‘s [guide](https://dortania.github.io/OpenCore-Post-Install/usb/ "USB port mapping guide") and I won‘t be duplicating it here.
+What‘s left is correct USB port mapping. The USB port map kexts in this repo are for ProBook 4530s models with USB 3.0 port. If you have a different mainboard (such as with all USB 2.0 ports) or if port mapping doesn‘t match for some other reason, you would have to re-map your USB ports by means of creating your own version of `USBMap.kext`. This procedure is fully covered in Dortania [guide](https://dortania.github.io/OpenCore-Post-Install/usb/ "USB port mapping guide") and I won‘t be duplicating it here.
 
 Kernel extensions (aka “Kexts”)
 -------------------------------
@@ -561,6 +561,11 @@ Now we can fill this information in `config.plist` (`PlatformInfo/Generic`):
       <string>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</string>
     </dict>
 ```
+
+Additional OpenCore tips
+------------------------
+
+Besides the Dortania OpenCore [install guide](https://dortania.github.io/OpenCore-Install-Guide/), there‘s a [collection](https://github.com/5T33Z0/OC-Little-Translated) of various OpenCore guides with configuration tips & tricks and fixes for various problems. If you face troubles using OpenCore and you already followed [general troubleshooting](https://dortania.github.io/OpenCore-Install-Guide/troubleshooting/troubleshooting.html), you might want to check there for a solution.
 
 Clover fallback
 ---------------
