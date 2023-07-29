@@ -562,6 +562,17 @@ Now we can fill this information in `config.plist` (`PlatformInfo/Generic`):
     </dict>
 ```
 
+Firefox not starting on Monterey
+--------------------------------
+
+Add `ipc_control_port_options=0` to your OpenCore `config.plist` `boot-args`:
+
+```xml
+        <key>boot-args</key>
+        <string>-no_compat_check amfi_get_out_of_my_way=1 slide=8 ipc_control_port_options=0 brcmfx-driver=1 brcmfx-country=EN</string>
+
+```
+
 Additional OpenCore tips
 ------------------------
 
