@@ -2,7 +2,7 @@
 <h1 align="center">ProBook 4x30s OpenCore</h1>
 <h3 align="center">4330s / 4530s / 4730s</h3>
 
-I have a very old Hewlett-Packard laptop: [HP ProBook 4530s](https://support.hp.com/us-en/product/hp-probook-4530s-notebook-pc/5060880). The tough bastard has a stylish metal frame, great chiclet-style scissor keyboard, and it stubbornly refuses to die after all these years. There are several things you could do with an old laptop, but thanks to marvels of modern software engineering and in particular, – [OpenCore](https://github.com/acidanthera/OpenCorePkg), – at least some laptops might have a brighter perspective. So instead of throwing it away or ~[turning](https://en.wikipedia.org/wiki/Zombie) it into a boring Linux file server~, we will be putting macOS on it, – and not just some old outdated version, but a modern one.
+I have a very old Hewlett-Packard laptop: [HP ProBook 4530s](https://support.hp.com/us-en/product/hp-probook-4530s-notebook-pc/5060880). The tough bastard has a stylish metal frame, great chiclet-style scissor keyboard, and it stubbornly refuses to die after all these years. There are several things you could do with an old laptop, but thanks to marvels of modern software engineering and in particular, – [OpenCore](https://github.com/acidanthera/OpenCorePkg), – at least some laptops might have a brighter perspective. So instead of throwing it away or ~[turning](https://en.wikipedia.org/wiki/Zombie) it into a boring Linux file server~, we will be putting macOS on it, – and not just some outdated version, but a modern one.
 
 ![macOS Installed on a ProBook 4530s](about-this-probook.png)
 
