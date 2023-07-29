@@ -19,7 +19,7 @@ This repository contains OpenCore [EFI folder](https://github.com/ubihazard/prob
 | **DVR-RW drive** | HP
 | **macOS**    | Monterey 12.6.8
 | **OpenCore** | [0.9.4-5afed6e](https://github.com/ubihazard/OpenCorePkg-ProBook/releases/tag/v0.9.4-5afed6e) (version for ProBook)
-| **OCLP** | 0.6.8
+| **OCLP** | [0.6.8](https://github.com/dortania/OpenCore-Legacy-Patcher/releases/tag/0.6.8)
 
 [^1]: Everything works. USB 3.0 works up to Catalina. Web cam might not work in some apps due to Metal: depends on the app and macOS version. USB 2.0 and Bluetooth need proper [USB port mapping](#acpi-aka-dsdt-patching).
 
