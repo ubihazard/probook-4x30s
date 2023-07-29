@@ -532,7 +532,7 @@ Finally, generate the `SystemUUID` for your ProBook:
 uuidgen
 ```
 
-Now we can fill the information in `config.plist` (`PlatformInfo/Generic`):
+Now we can fill this information in `config.plist` (`PlatformInfo/Generic`):
 
 ```xml
     <key>Generic</key>
