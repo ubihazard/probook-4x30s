@@ -512,7 +512,7 @@ First, you need to choose the Mac product name closest to your hardware. For thi
 macserial -m 'MacBookPro8,1' -n 1
 ```
 
-The system serial number you got must be reported as “invalid” or “not found” on Apple [support coverage](https://checkcoverage.apple.com/) page. If it doesn‘t, it means it belongs to an actual Mac, and you must generate another serial number and check it again.
+The system serial number you got must be reported as “invalid” or “not found” on Apple [support coverage](https://checkcoverage.apple.com/ "Serial number check") page. If it‘s valid, it means it belongs to an actual Mac, and you must generate another serial number and check it again.
 
 Next, find out your ethernet adapter MAC address and strip it of `:` characters, – this would be your `ROM`:
 
@@ -563,7 +563,7 @@ Now we can fill the information in `config.plist` (`PlatformInfo/Generic`):
 Clover fallback
 ---------------
 
-There‘s a [legacy](https://web.archive.org/web/20230215221820/https://www.tonymacx86.com/threads/guide-hp-probook-elitebook-zbook-using-clover-uefi-hotpatch.261719/ "RehabMan‘s guide") Clover bootloader [EFI folder](https://github.com/ubihazard/probook-4x30s/releases/download/v1.0/EFI-Clover.zip "Download") provided just in case if you have trouble getting OpenCore to work. The included Clover version has only been tested with macOS Sierra and High Sierra, with Atheros Wi-Fi, and it definitely won’t be able to boot Big Sur.
+There‘s a [legacy](https://web.archive.org/web/20230215221820/https://www.tonymacx86.com/threads/guide-hp-probook-elitebook-zbook-using-clover-uefi-hotpatch.261719/ "RehabMan‘s guide") Clover bootloader [EFI folder](https://github.com/ubihazard/probook-4x30s/releases/download/v1.0/EFI-Clover.zip "Download") provided just in case if you have trouble getting OpenCore to work. The included Clover version has only been tested with macOS Sierra and High Sierra using Atheros Wi-Fi, and it definitely won’t be able to boot Big Sur.
 
 You will still need to generate `SSDT-PM.aml` for your CPU power management and replace the one in `CLOVER/ACPI/patched`. So remove it and temporarily move `NullCPUPowerManagement.kext` from `CLOVER/kexts/Disabled` to `CLOVER/kexts/Other` to get macOS to boot so you can [run](#restoring-power-management) `ssdtPRGen.sh`.
 
