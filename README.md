@@ -142,7 +142,7 @@ Do the other way around. Mojave and below: enable `BrcmBluetoothInjector.kext` a
 
 ```xml
         <key>boot-args</key>
-        <string>-no_compat_check amfi_get_out_of_my_way=1 brcmfx-driver=2 brcmfx-country=US</string>
+        <string>-no_compat_check amfi_get_out_of_my_way=1 brcmfx-driver=1 brcmfx-country=US</string>
 ```
 
 **For ProBook 4x30s series only:** enable Wi-Fi BIOS whitelist bypass EFI driver in `UEFI/Drivers` (`Enabled` -> `true`):
