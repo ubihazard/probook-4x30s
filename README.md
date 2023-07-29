@@ -6,7 +6,7 @@ I have a very old Hewlett-Packard laptop: [HP ProBook 4530s](https://support.hp.
 
 ![macOS Installed on a ProBook 4530s](about-this-probook.png)
 
-This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-Guide/ "OpenCore bootloader install guide") [EFI folder](https://github.com/ubihazard/probook-4x30s/releases/download/v1.1/EFI-0.9.4-5afed6e.7z "Download") with everything needed to run modern versions of [macOS](https://support.apple.com/macos) on old HP ProBook 4x30s series Sandy Bridge laptops: with little [adjustments](#restoring-power-management) for your particular laptop. Only models with integrated Intel HD 3000 graphics are supported. Other models, such as with AMD GPUs, will require additional steps to [turn their dedicated GPU off](#disabling-dedicated-gpu) since it likely isn‘t supported by macOS.
+This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-Guide/ "OpenCore bootloader install guide") [EFI folder](https://github.com/ubihazard/probook-4x30s/releases/download/v1.1/EFI-0.9.4-5afed6e.zip "Download") with everything needed to run modern versions of [macOS](https://support.apple.com/macos) on old HP ProBook 4x30s series Sandy Bridge laptops: with little [adjustments](#restoring-power-management) for your particular laptop. Only models with integrated Intel HD 3000 graphics are supported. Other models, such as with AMD GPUs, will require additional steps to [turn their dedicated GPU off](#disabling-dedicated-gpu) since it likely isn‘t supported by macOS.
 
 | **Name**[^1] | Description
 | ------------ | -----------
@@ -17,17 +17,18 @@ This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-
 | **USB 3.0**  | Realtek
 | **Card reader** | JMicron
 | **DVR-RW drive** | HP
+| **macOS**    | Monterey 12.6.8
 | **OpenCore** | [0.9.4-5afed6e](https://github.com/ubihazard/OpenCorePkg-ProBook/releases/tag/v0.9.4-5afed6e) (version for ProBook)
 | **OCLP** | 0.6.7
 
-[^1]: Everything works. USB 3.0 and web cam might work only up to High Sierra. USB 2.0 and Bluetooth need proper [port mapping](#acpi-aka-dsdt-patching).
+[^1]: Everything works. USB 3.0 works up to Catalina. Web cam might not work in some apps due to Metal: depends on the app and macOS version. USB 2.0 and Bluetooth need proper [USB port mapping](#acpi-aka-dsdt-patching).
 
 Although this laptop is very old, macOS works surprisingly well on it with pretty much full compatibility. You can expect relatively smooth web browsing experience, word processing, and coding light projects in VS Code (nothing too demanding). Don‘t expect running XCode with iOS simulator on it though. It can also help you manage your iThings if you don‘t already have a Mac.
 
 Getting your laptop ready
 -------------------------
 
-Before you start it is recommended that you consider upgrading your ProBook. All of its off-the-shelf configurations are hopelessly outdated by now, but thanks to its age most components from that time are sold dirt cheap on used markets and Aliexpress.
+Before you begin, it is recommended that you consider upgrading your ProBook. All of its off-the-shelf configurations are hopelessly outdated by now, but thanks to its age most components from that time are sold dirt cheap on used markets and Aliexpress.
 
 ### SSD
 
@@ -43,7 +44,7 @@ For reference, my dual-core Core i7-2640M with high-quality TIM applied hits **9
 
 ### Wi-Fi
 
-Depending on a version of macOS you would choose to install, you might also need to change your wireless adapter to compatible one. This is not going to be easy because ProBook 4x30s suffers from a dreaded BIOS Wi-Fi whitelist. Luckily, there are workarounds. You can install a compatible Atheros card and [rebrand](https://web.archive.org/web/20230315063103/https://www.tonymacx86.com/threads/rebranding-the-atheros-928x-cards-the-guide.115110/) it to pass whitelist check (BigSur), or you can try going for Broadcom BCM94352HMB (Monterey). The latter would require BIOS Wi-Fi whitelist [bypass hack](#broadcom-wi-fi) and a hardware mod on a card itself: you will need to mask certain PCB contacts with tiny pieces of kapton tape to prevent HP firmware from turning the Wi-Fi module off. (Without this mod only Bluetooth side will work.)
+Depending on a version of macOS you would choose to install, you might also need to change your wireless adapter to compatible one. This is not going to be easy because ProBook 4x30s suffers from a dreaded BIOS Wi-Fi whitelist. Luckily, there are workarounds. You can install a compatible Atheros card and [rebrand it](https://web.archive.org/web/20230315063103/https://www.tonymacx86.com/threads/rebranding-the-atheros-928x-cards-the-guide.115110/) to pass whitelist check (BigSur), or you can try going for Broadcom BCM94352HMB (Monterey). The latter would require BIOS Wi-Fi whitelist [bypass hack](#broadcom-wi-fi) and a hardware mod on a card itself: you will need to mask certain PCB contacts with tiny pieces of kapton tape to prevent HP firmware from turning the Wi-Fi module off. (Without this mod only Bluetooth side will work.)
 
 ![BCM94352HMB Wi-Fi BIOS whitelist hardware hack](bcm94352hmb_hw_whitelist_hack.jpg)
 
@@ -60,7 +61,7 @@ This guide now uses a [custom build](https://github.com/ubihazard/OpenCorePkg-Pr
 
 **Do not use these EFI modules with any other laptop other than ProBook 4330s, 4530s, or 4730s. Doing so can brick your device!**
 
-~`ProBookFanReset.efi` resets fan control from macOS back to automatic BIOS control.~ `ProBookWifiWhlistOff.efi` is necessary if you [plan to install](#wi-fi) a non-whitelisted (i.e. not approved by HP) Wi-Fi card in your laptop.
+~`ProBookFanReset.efi` resets fan control from macOS back to automatic BIOS control.~ `ProBookWifiWhlistOff.efi` is necessary if you [plan to install](#wi-fi) a non-whitelisted (not approved by HP) Wi-Fi card in your laptop.
 
 ACPI (aka DSDT patching)
 ------------------------
@@ -74,7 +75,7 @@ What‘s left is correct USB port mapping. The USB port map kexts in this repo a
 Kernel extensions (aka “Kexts”)
 -------------------------------
 
-Kernel extensions, or “kexts”, are required for proper hardware support by macOS. There isn‘t much more to say here: all required kexts are already assembled in one place in the provided EFI OC folder. Though you might need to disable some and enable others to adjust for your particular system (`Kernel/Add`).
+Kernel extensions, or “kexts”, are required for proper hardware support by macOS. There isn‘t much more to say here: all required kexts are already assembled in one place in the provided EFI OpenCore folder. Though you might need to disable some and enable others to adjust for your particular system (`Kernel/Add`).
 
 ### Atheros Wi-Fi
 
@@ -137,7 +138,7 @@ Open `WifiLocFix.kext/Contents/Info.plist` and change the country code (`US`) an
 
 ### Broadcom Wi-Fi
 
-Do the other way around. Add Broadcom configuration parameters to OpenCore `config.plist` `boot-args` with your country code (`NVRAM/Add/7C436110-AB2A-4BBB-A880-FE41995C9F82`):
+Do the other way around. Mojave and below: enable `BrcmBluetoothInjector.kext` and disable `BrcmPatchRAM2.kext`. If you don‘t get Wi-Fi it means your card needs a firmware uploader, so switch them around. *Do not use `BrcmPatchRAM2.kext` together with `BrcmBluetoothInjector.kext`, or you‘ll get kernel panics.* Add Broadcom configuration parameters to OpenCore `config.plist` `boot-args` with your country code (`NVRAM/Add/7C436110-AB2A-4BBB-A880-FE41995C9F82`):
 
 ```xml
         <key>boot-args</key>
@@ -176,6 +177,8 @@ You might also need to add `SSDT-ARPT-RP0X-BCM4352.aml` to your EFI ACPI folder 
       </dict>
 ```
 
+In my case this SSDT wasn‘t needed.
+
 ### Intel Wi-Fi
 
 Sorry, you are on your own here.
@@ -183,7 +186,7 @@ Sorry, you are on your own here.
 What macOS version to install
 -----------------------------
 
-The recommended macOS version(s) to install is ~Sierra~ High Sierra together with Big Sur. High Sierra is the last version of macOS with native support for Intel HD 3000 graphics and Atheros Wi-Fi. And Big Sur is just modern enough for everyday use (sans Metal acceleration), although it requires additional patched kexts to recover removed functionality. Having them both installed side-by-side would offer best of both worlds: use whatever you can on High Sierra and hop onto Big Sur for incompatible apps, such as modern browser. Definitely go with just Big Sur alone if you can‘t afford enough storage space for both.
+The recommended macOS version(s) to install is ~Sierra~ High Sierra together with Big Sur. High Sierra is the last version of macOS with native support for Intel HD 3000 graphics and Atheros Wi-Fi. And Big Sur is just modern enough for everyday use (sans Metal acceleration), although it requires additional patched kexts to recover removed hardware support. Having them both installed side-by-side would offer best of both worlds: use whatever you can on High Sierra and hop onto Big Sur for incompatible apps, such as modern browser. Definitely go with just Big Sur alone if you can‘t afford enough storage space for both.
 
 Mojave and Catalina (especially Catalina) is *not recommended*. They aren‘t supported well by the OpenCore Legacy Patcher (OCLP), which is used to restore legacy HD 3000 graphics acceleration, and Catalina in particular was released at a time when Hackintosh community was transitioning from Clover to OpenCore. As a result, it suffers form likewise poor support form both Clover and OpenCore. (This is on top of being buggy and problematic even on real Macs.)
 
@@ -211,7 +214,7 @@ Use separate config for installer
 
 For USB installer you will need a slightly different OpenCore `config.plist` modified specifically for installing macOS. It disables some kexts which are useless during installation (Wi-Fi, Bluetooth, card reader, etc.), doesn’t modify SIP flags, enables verbose boot (kernel text messages), and has a different SMBIOS Mac model which allows to install ~Big Sur~ Monterey.
 
-Grab it [directly](/config.plist "USB installer OpenCore config") from this repository (not from releases page).
+Grab it [directly](/EFI/OC/config.plist "USB installer OpenCore config") from this repository (not from releases page).
 
 Disabling dedicated GPU
 -----------------------
@@ -224,6 +227,11 @@ For laptop models with dedicated GPU soldered onto motherboard an additional `-w
 ```
 
 This causes all dedicated GPUs to be disabled. Make sure to also disable dGPU in your laptop‘s BIOS.
+
+APFS driver version
+-------------------
+
+OpenCore from the provided EFI folder will load any APFS driver available. This is done to make initial setup easier in case of multiple macOS installations (e.g. High Sierra together with Big Sur). For security reasons, it is recommeded that after installation you would [change](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/sandy-bridge.html#apfs) the minimum allowed APFS driver version according to the latest macOS version you have installed. For Big Sur and above, leave both `MinVersion` and `MinDate` at `0`.
 
 Restoring graphics acceleration and a note on Metal support
 -----------------------------------------------------------
@@ -330,6 +338,29 @@ Without this step `AppleIntelCPUPowerManagement.kext` would cause kernel panic s
           </dict>
     ```
 
+If you went with Monterey, make sure `ASPP-Override.kext` is enabled, because it is required to restore Sandy Bridge CPU power management, which was at some point removed in Monterey (and might be removed in Big Sur as well):
+
+```xml
+			<dict>
+				<key>Arch</key>
+				<string>Any</string>
+				<key>BundlePath</key>
+				<string>ASPP-Override.kext</string>
+				<key>Comment</key>
+				<string>ASPP-Override.kext</string>
+				<key>Enabled</key>
+				<true/>
+				<key>ExecutablePath</key>
+				<string></string>
+				<key>MaxKernel</key>
+				<string></string>
+				<key>MinKernel</key>
+				<string>21.4.0</string>
+				<key>PlistPath</key>
+				<string>Contents/Info.plist</string>
+			</dict>
+```
+
 Fixing blur effects in Big Sur and Monterey
 -------------------------------------------
 
@@ -433,7 +464,7 @@ Replace the original file with your edited copy:
 cp com.apple.AppleMultitouchTrackpad.plist ~/Library/Preferences/
 ```
 
-*You must log out and log in back for changes to apply. A reboot is not needed.*
+*A reboot is required to make it work.*
 
 A pre-made trackpad configuration file with tap to click is [provided](/Library/Preferences/com.apple.AppleMultitouchTrackpad.plist "Trackpad config") and should suit most users well. Copy it to `~/Library/Preferences` replacing the original.
 
@@ -524,7 +555,7 @@ Now we can fill the information in `config.plist` (`PlatformInfo/Generic`):
 Clover fallback
 ---------------
 
-There‘s a [legacy](https://web.archive.org/web/20230215221820/https://www.tonymacx86.com/threads/guide-hp-probook-elitebook-zbook-using-clover-uefi-hotpatch.261719/ "RehabMan‘s guide") Clover bootloader [EFI folder](https://github.com/ubihazard/probook-4x30s/releases/download/v1.0/EFI-Clover.7z "Download") provided just in case if you have trouble getting OpenCore to work. The included Clover version has only been tested with macOS Sierra and High Sierra, with Atheros Wi-Fi, and it definitely won’t be able to boot Big Sur.
+There‘s a [legacy](https://web.archive.org/web/20230215221820/https://www.tonymacx86.com/threads/guide-hp-probook-elitebook-zbook-using-clover-uefi-hotpatch.261719/ "RehabMan‘s guide") Clover bootloader [EFI folder](https://github.com/ubihazard/probook-4x30s/releases/download/v1.0/EFI-Clover.zip "Download") provided just in case if you have trouble getting OpenCore to work. The included Clover version has only been tested with macOS Sierra and High Sierra, with Atheros Wi-Fi, and it definitely won’t be able to boot Big Sur.
 
 You will still need to generate `SSDT-PM.aml` for your CPU power management and replace the one in `CLOVER/ACPI/patched`. So remove it and temporarily move `NullCPUPowerManagement.kext` from `CLOVER/kexts/Disabled` to `CLOVER/kexts/Other` to get macOS to boot so you can [run](#restoring-power-management) `ssdtPRGen.sh`.
 
@@ -533,7 +564,7 @@ Note that Clover and OpenCore don’t mix well together. In my experience a NVRA
 Credits
 -------
 
-All credits go to [RehabMan](https://github.com/RehabMan), [toleda](https://github.com/toleda), [acidanthera](https://github.com/acidanthera), [dortania](https://github.com/dortania), [moraea](https://github.com/moraea), and the rest of talented individuals who worked hard to make running macOS on regular PCs and unsupported hardware a reality.
+All credits go to [RehabMan](https://github.com/RehabMan), [toleda](https://github.com/toleda), [chris1111](https://github.com/chris1111), [acidanthera](https://github.com/acidanthera), [dortania](https://github.com/dortania), [moraea](https://github.com/moraea), and the rest of talented individuals who worked hard to make running macOS on regular PCs and unsupported hardware a reality.
 
 ⭐ Support
 ---------
