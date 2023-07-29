@@ -66,7 +66,7 @@ This guide now uses a [custom build](https://github.com/ubihazard/OpenCorePkg-Pr
 ACPI (aka DSDT patching)
 ------------------------
 
-Most ACPI patches for these laptop models (and EliteBooks / ZBooks) are from legendary [RehabMan](https://github.com/RehabMan).
+Most [ACPI patches](https://github.com/RehabMan/HP-ProBook-4x30s-DSDT-Patch) for this laptop (and other ProBooks, EliteBooks, and ZBooks) were made by legendary [RehabMan](https://github.com/RehabMan).
 
 However, I wasn‘t able to make his “hot patch” SSDTs work with OpenCore. I don‘t know if it‘s because they were made with Clover in mind or if there‘s some other reason. Looking at their code, they appear to be rather complex and utilize custom `RMCF` “RehabMan configuration” device definition block. Regardless, SSDTs provided by Dortania in their [Sandy Bridge laptop guide](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/sandy-bridge.html "Sandy Bridge laptop guide") do happen to work just fine, – but pay attention to `SSDT-PM`. Though I did carefully port the rest of ACPI patches from RehabMan‘s original Clover config to OpenCore config format.
 
