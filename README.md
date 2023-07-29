@@ -399,6 +399,8 @@ Apparently, there‘s something low-level going on in the code that handles the 
 
 This means dual-booting Linux or Windows with macOS on this laptop is *not an option*.
 
+And for this reason also, *avoid using any ACPI “fan patches”* (quiet, RehabMan, etc.), such as `HPFanReset.efi`, as they write to EC causing the aformentioned corruption.
+
 Increasing HD 3000 VRAM
 -----------------------
 
