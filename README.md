@@ -509,10 +509,10 @@ The final step to setting up your new hackintosh laptop is generating serial num
 First, you need to choose the Mac product name closest to your hardware. For this laptop model it would be `MacBookPro8,1`. Now you can use `macserial` tool from OpenCore utilities to generate serials (`SystemSerialNumber` and `MLB`, or “motherboard serial number”):
 
 ```bash
-macserial -m 'MacBookPro8,1' -n 1
+./macserial -m 'MacBookPro8,1' -n 1
 ```
 
-The system serial number you got must be reported as “invalid” or “not found” on Apple [support coverage](https://checkcoverage.apple.com/ "Serial number check") page. If it‘s valid, it means it belongs to an actual Mac, and you must generate another serial number and check it again.
+The system serial number you generated must be reported as “invalid” or “not found” on Apple [support coverage](https://checkcoverage.apple.com/ "Serial number check") page. If it‘s valid, it means it belongs to an actual Mac, and you must generate another serial number and check it again.
 
 Next, find out your ethernet adapter MAC address and strip it of `:` characters, – this would be your `ROM`:
 
