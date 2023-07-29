@@ -19,7 +19,7 @@ This repository contains [OpenCore](https://dortania.github.io/OpenCore-Install-
 | **DVR-RW drive** | HP
 | **macOS**    | Monterey 12.6.8
 | **OpenCore** | [0.9.4-5afed6e](https://github.com/ubihazard/OpenCorePkg-ProBook/releases/tag/v0.9.4-5afed6e) (version for ProBook)
-| **OCLP** | 0.6.7
+| **OCLP** | 0.6.8
 
 [^1]: Everything works. USB 3.0 works up to Catalina. Web cam might not work in some apps due to Metal: depends on the app and macOS version. USB 2.0 and Bluetooth need proper [USB port mapping](#acpi-aka-dsdt-patching).
 
@@ -138,7 +138,7 @@ Open `WifiLocFix.kext/Contents/Info.plist` and change the country code (`US`) an
 
 ### Broadcom Wi-Fi
 
-Do the other way around. Mojave and below: enable `BrcmBluetoothInjector.kext` and disable `BrcmPatchRAM2.kext`. If you don‘t get Wi-Fi it means your card needs a firmware uploader, so switch them around. *Do not use `BrcmPatchRAM2.kext` together with `BrcmBluetoothInjector.kext`, or you‘ll get kernel panics.* Add Broadcom configuration parameters to OpenCore `config.plist` `boot-args` with your country code (`NVRAM/Add/7C436110-AB2A-4BBB-A880-FE41995C9F82`):
+Do the other way around. Mojave and below: enable `BrcmBluetoothInjector.kext` and disable `BrcmPatchRAM2.kext`. If you don‘t get Wi-Fi it means your card needs a [firmware uploader](https://github.com/acidanthera/BrcmPatchRAM#brcmbluetoothinjectorkext), so switch them around. *Do not use `BrcmPatchRAM2.kext` together with `BrcmBluetoothInjector.kext`, or you‘ll get kernel panics.* Add Broadcom configuration parameters to OpenCore `config.plist` `boot-args` with your country code (`NVRAM/Add/7C436110-AB2A-4BBB-A880-FE41995C9F82`):
 
 ```xml
         <key>boot-args</key>
@@ -341,24 +341,24 @@ Without this step `AppleIntelCPUPowerManagement.kext` would cause kernel panic s
 If you went with Monterey, make sure `ASPP-Override.kext` is enabled, because it is required to restore Sandy Bridge CPU power management, which was at some point removed in Monterey (and might be removed in Big Sur as well):
 
 ```xml
-			<dict>
-				<key>Arch</key>
-				<string>Any</string>
-				<key>BundlePath</key>
-				<string>ASPP-Override.kext</string>
-				<key>Comment</key>
-				<string>ASPP-Override.kext</string>
-				<key>Enabled</key>
-				<true/>
-				<key>ExecutablePath</key>
-				<string></string>
-				<key>MaxKernel</key>
-				<string></string>
-				<key>MinKernel</key>
-				<string>21.4.0</string>
-				<key>PlistPath</key>
-				<string>Contents/Info.plist</string>
-			</dict>
+      <dict>
+        <key>Arch</key>
+        <string>Any</string>
+        <key>BundlePath</key>
+        <string>ASPP-Override.kext</string>
+        <key>Comment</key>
+        <string>ASPP-Override.kext</string>
+        <key>Enabled</key>
+        <true/>
+        <key>ExecutablePath</key>
+        <string></string>
+        <key>MaxKernel</key>
+        <string></string>
+        <key>MinKernel</key>
+        <string>21.4.0</string>
+        <key>PlistPath</key>
+        <string>Contents/Info.plist</string>
+      </dict>
 ```
 
 Fixing blur effects in Big Sur and Monterey
@@ -512,10 +512,18 @@ First, you need to choose the Mac product name closest to your hardware. For thi
 macserial -m 'MacBookPro8,1' -n 1
 ```
 
+The system serial number you got must be reported as “invalid” or “not found” on Apple [support coverage](https://checkcoverage.apple.com/) page. If it doesn‘t, it means it belongs to an actual Mac, and you must generate another serial number and check it again.
+
 Next, find out your ethernet adapter MAC address and strip it of `:` characters, – this would be your `ROM`:
 
 ```bash
 ifconfig
+```
+
+Encode your `ROM` value in Base64:
+
+```bash
+echo AABBCCXXYYZZ | base64
 ```
 
 Finally, generate the `SystemUUID` for your ProBook:
