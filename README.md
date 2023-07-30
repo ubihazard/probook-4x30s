@@ -384,7 +384,7 @@ In Monterey you can get noticeable performance improvement by enabling reduced t
 defaults write com.apple.dock Moraea_EnableTransparency 1
 ```
 
-Log out and back in to see the changes.
+Log out and back in to see the changes. Some of these [commands](https://moraea.github.io/Docs/defaults.html), like `Moraea_EnableTransparency`, require a reboot to be applied.
 
 HD 3000 graphical glitches
 --------------------------
