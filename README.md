@@ -466,7 +466,7 @@ Replace the original file with your edited copy:
 cp com.apple.AppleMultitouchTrackpad.plist ~/Library/Preferences/
 ```
 
-*A reboot is required to make it work.*
+*Rebooting is required to make it work. (Assuming you also didn‘t make any mistakes while editing the file.)*
 
 A pre-made trackpad configuration file with tap to click is [provided](/Library/Preferences/com.apple.AppleMultitouchTrackpad.plist "Trackpad config") and should suit most users well. Copy it to `~/Library/Preferences` replacing the original.
 
