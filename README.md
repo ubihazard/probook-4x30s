@@ -63,8 +63,8 @@ This guide now uses a [custom build](https://github.com/ubihazard/OpenCorePkg-Pr
 
 ~`ProBookFanReset.efi` resets fan control from macOS back to automatic BIOS control.~ `ProBookWifiWhlistOff.efi` is necessary if you [plan to install](#wi-fi) a non-whitelisted (not approved by HP) Wi-Fi card in your laptop.
 
-ACPI (aka DSDT patching)
-------------------------
+ACPI (DSDT patching)
+--------------------
 
 Most [ACPI patches](https://github.com/RehabMan/HP-ProBook-4x30s-DSDT-Patch) for this laptop (and other ProBooks, EliteBooks, and ZBooks) were made by legendary [RehabMan](https://github.com/RehabMan).
 
@@ -72,8 +72,8 @@ However, I wasn‘t able to make his “hot patch” SSDTs work with OpenCore. I
 
 What‘s left is correct USB port mapping. The USB port map kexts in this repo are for ProBook 4530s models with USB 3.0 port. If you have a different mainboard (such as with all USB 2.0 ports) or if port mapping doesn‘t match for some other reason, you would have to re-map your USB ports by means of creating your own version of `USBMap.kext`. This procedure is fully covered in Dortania [guide](https://dortania.github.io/OpenCore-Post-Install/usb/ "USB port mapping guide") and I won‘t be duplicating it here.
 
-Kernel extensions (aka “Kexts”)
--------------------------------
+Kernel extensions
+-----------------
 
 Kernel extensions, or “kexts”, are required for proper hardware support by macOS. There isn‘t much more to say here: all required kexts are already assembled in one place in the provided EFI OpenCore folder. Though you might need to disable some and enable others to adjust for your particular system (`Kernel/Add`).
 
