@@ -164,7 +164,7 @@ Do the other way around. Mojave and below: enable `BrcmBluetoothInjector.kext` a
 
 **Do not use this driver with any other laptop: doing so can brick your device!**
 
-You might also need to add `SSDT-ARPT-RP0X-BCM4352.aml` to your EFI ACPI folder and `config.plist` for native Airport support. You can get it from [toleda](https://github.com/toleda) [wireless half-mini repo](https://github.com/toleda/wireless_half-mini/tree/master/ssdt_arpt "Airport BCM4352 SSDT"): follow instructions on the linked page to find out which one you need (`ACPI/Add`, `Enabled` -> `true`).
+You might also need to add `SSDT-ARPT-RP0X-BCM4352.aml` to your EFI ACPI folder and `config.plist` for native Airport support. You can get it from [toleda wireless half-mini repo](https://github.com/toleda/wireless_half-mini/tree/master/ssdt_arpt "Airport BCM4352 SSDT"): follow instructions on the linked page to find out which one you need (`ACPI/Add`, `Enabled` -> `true`).
 
 ```xml
       <dict>
