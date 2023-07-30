@@ -378,7 +378,7 @@ defaults write -g Moraea_RimBeta -bool true
 defaults write -g Moraea_DarkMenuBar -bool true
 ```
 
-In Monterey you can get noticeable performance improvement by enabling reduced transparency mode in Accessibility settings. (This mode is broken on BigSir with patched kexts, rendering the menu bar unusable.) With this on, you can now selectively re-enable transparency and blur for the dock:
+In Monterey you can get noticeable performance improvement by enabling reduced transparency mode in Accessibility settings. (This mode is broken on Big Sur with patched kexts, rendering the menu bar unusable.) With this on, you can now selectively re-enable transparency and blur for the dock:
 
 ```bash
 defaults write com.apple.dock Moraea_EnableTransparency 1
@@ -498,7 +498,7 @@ Due to extensive modifications required to support this laptop on modern macOS i
 
 ```xml
         <key>csr-active-config</key>
-        <data>Awg=</data>
+        <data>AwgAAA==</data>
 ```
 
 The configured value is `0x803`.
@@ -576,7 +576,7 @@ Add `ipc_control_port_options=0` to your OpenCore `config.plist` `boot-args`:
 Additional OpenCore tips
 ------------------------
 
-Besides the Dortania OpenCore [install guide](https://dortania.github.io/OpenCore-Install-Guide/), there‘s a [collection](https://github.com/5T33Z0/OC-Little-Translated) of various OpenCore guides with configuration tips & tricks and fixes for various problems. If you face troubles using OpenCore and you already followed [general troubleshooting](https://dortania.github.io/OpenCore-Install-Guide/troubleshooting/troubleshooting.html), you might want to check there for a solution.
+Besides the Dortania OpenCore [install guide](https://dortania.github.io/OpenCore-Install-Guide/), there‘s a [collection](https://github.com/5T33Z0/OC-Little-Translated) of various OpenCore guides with configuration tips & tricks and fixes for various problems. If you face troubles using OpenCore and you already followed the [general troubleshooting](https://dortania.github.io/OpenCore-Install-Guide/troubleshooting/troubleshooting.html), you might want to check there for a solution.
 
 Clover fallback
 ---------------
