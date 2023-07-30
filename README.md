@@ -338,7 +338,7 @@ Without this step `AppleIntelCPUPowerManagement.kext` would cause kernel panic s
           </dict>
     ```
 
-If you went with Monterey, make sure `ASPP-Override.kext` is enabled, because it is required to restore Sandy Bridge CPU power management, which was at some point removed in Monterey (and might be removed in Big Sur as well):
+If you went with Monterey, make sure `ASPP-Override.kext` is enabled, because it is required to restore Sandy Bridge CPU power management, which was at some point removed in Monterey (and might be removed in Big Sur as well in the future):
 
 ```xml
       <dict>
