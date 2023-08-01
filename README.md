@@ -16,13 +16,13 @@ This repository contains OpenCore [EFI folder](https://github.com/ubihazard/prob
 | **Wi-Fi & Bluetooth** | Broadcom BCM94352HMB / Atheros AR9285
 | **Ethernet** | Realtek RTL8111
 | **USB 3.0**  | NEC Renesas uPD720200
-| **Card reader** | JMicron JMB38X
+| **Card reader** | JMicron JMB38X[^1]
 | **DVD drive** | HP DVD-RW AD-7740H
 | **macOS**    | Monterey 12.6.8 / High Sierra 10.3.6
 | **OpenCore** | [0.9.4-5afed6e](https://github.com/ubihazard/OpenCorePkg-ProBook/releases/tag/v0.9.4-5afed6e) for ProBook 4x30s
 | **OCLP** | [0.6.8](https://github.com/dortania/OpenCore-Legacy-Patcher/releases/tag/0.6.8)
 
-[^1]: Everything works. USB 3.0 works up to Catalina. Web cam might not work in some apps due to Metal: depends on the app‘s and macOS‘ version. USB 2.0 and Bluetooth need proper [USB port mapping](#acpi-aka-dsdt-patching).
+[^1]: Everything works. USB 3.0 works up to Catalina. Web cam might not work in some apps due to Metal: depends on the app‘s and macOS‘ version. USB 2.0 and Bluetooth need proper [USB port mapping](#acpi-aka-dsdt-patching). A SD card has to be formatted in exFAT / FAT to avoid random kernel panics with JMicron kext.
 
 Although this laptop is very old, macOS works surprisingly well on it with pretty much full compatibility. You can expect relatively smooth web browsing experience, word processing, and coding light projects in VS Code (nothing too demanding). Don‘t expect running XCode with iOS simulator on it though. It can also help you manage your iThings if you don‘t already have a Mac.
 
