@@ -1112,8 +1112,6 @@
 				<data>AQMBAQAAAAI=</data>
 				<key>framebuffer-patch0-replace</key>
 				<data>AQIEAgAAAAQ=</data>
-				<key>AAPL00,DualLink</key>
-				<data>AQAAAA==</data>
 			</dict>
 			<key>PciRoot(0x0)/Pci(0x1b,0x0)</key>
 			<dict>
