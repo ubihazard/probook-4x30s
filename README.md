@@ -77,7 +77,7 @@ What‘s left is correct USB port mapping. The USB port map kexts in this repo a
 Full HD and HD+ screens
 -----------------------
 
-If your laptop‘s screen resolution is higher than standard HD, – 1600×900 or 1920×1080, – anything higher than 1366×768 or 720p, add the following to `config.plist` under `DeviceProperties/Add/PciRoot(0x0)/Pci(0x2,0x0)`:
+If your laptop‘s screen resolution is higher than standard HD, – 1600×900 or 1920×1080 (anything higher than 1366×768 or 720p), – add the following to `config.plist` under `DeviceProperties/Add/PciRoot(0x0)/Pci(0x2,0x0)`:
 
 ```xml
         <key>AAPL00,DualLink</key>
