@@ -16,7 +16,7 @@ This repository contains OpenCore [EFI folder](https://github.com/ubihazard/prob
 | **SSD**      | 512 GB
 | **Wi-Fi & Bluetooth** | Broadcom BCM94352HMB / Atheros AR9285
 | **Ethernet** | Realtek RTL8111
-| **USB 3.0**  | NEC Renesas uPD720200
+| **USB 3.0**  | NEC Renesas uPD720200[^1]
 | **Card reader** | JMicron JMB38X[^1]
 | **DVD drive** | HP DVD-RW AD-7740H
 | **macOS**    | Monterey 12.6.8 / High Sierra 10.3.6
