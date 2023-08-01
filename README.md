@@ -6,9 +6,9 @@ I have an old Hewlett-Packard laptop: [HP ProBook 4530s](https://support.hp.com/
 
 ![macOS Installed on a ProBook 4530s](about-this-probook.png)
 
-This repository contains OpenCore [EFI folder](https://github.com/ubihazard/probook-4x30s/releases/download/v1.1/EFI-0.9.4-5afed6e.zip "Download") with everything needed to run modern versions of [macOS](https://support.apple.com/macos) on old HP ProBook 4x30s series Sandy Bridge laptops: with little [adjustments](#restoring-power-management) for your particular laptop. Only models with integrated Intel HD 3000 graphics are supported. Other models, such as with AMD GPUs, will require additional steps to [turn their dedicated GPU off](#disabling-dedicated-gpu) since it likely isn‘t supported by macOS. In any case, it is highly recommended that you read the official [install guide](https://dortania.github.io/OpenCore-Install-Guide/ "OpenCore install guide") before attempting the actual setup.
+This repository contains OpenCore [EFI folder](https://github.com/ubihazard/probook-4x30s/releases/download/v1.1/EFI-0.9.4-5afed6e.zip "Download") with everything needed to run modern versions of [macOS](https://support.apple.com/macos) on old HP ProBook 4x30s series Sandy Bridge laptops: with little [adjustments](#restoring-power-management) for your particular laptop[^1]. Only models with integrated Intel HD 3000 graphics are supported. Other models, such as with AMD GPUs, will require additional steps to [turn their dedicated GPU off](#disabling-dedicated-gpu) since it likely isn‘t supported by macOS. In any case, it is highly recommended that you read the official [install guide](https://dortania.github.io/OpenCore-Install-Guide/ "OpenCore install guide") before attempting the actual setup.
 
-| **Name**[^1] | Description
+| **Name**     | Description
 | ------------ | -----------
 | **CPU**      | Intel Core i7-2640M
 | **GPU**      | Intel HD 3000
