@@ -74,6 +74,16 @@ However, I wasn‘t able to make his “hot patch” SSDTs work with OpenCore. I
 
 What‘s left is correct USB port mapping. The USB port map kexts in this repo are for ProBook 4530s models with USB 3.0 port. If you have a different mainboard (such as with all USB 2.0 ports) or if port mapping doesn‘t match for some other reason, you would have to re-map your USB ports by means of creating your own version of `USBMap.kext`. This procedure is fully covered in Dortania [guide](https://dortania.github.io/OpenCore-Post-Install/usb/ "USB port mapping guide") and I won‘t be duplicating it here.
 
+Full HD and HD+ screens
+-----------------------
+
+If your laptop‘s screen resolution is higher than standard HD, – 1600×900 or 1920×1080, – anything higher than 1366×768 or 720p, add the following to `config.plist` under `DeviceProperties/Add/PciRoot(0x0)/Pci(0x2,0x0)`:
+
+```xml
+        <key>AAPL00,DualLink</key>
+        <data>AQAAAA==</data>
+```
+
 Kernel extensions
 -----------------
 
