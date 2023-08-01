@@ -11,6 +11,7 @@ This repository contains OpenCore [EFI folder](https://github.com/ubihazard/prob
 | **Name**[^1] | Description
 | ------------ | -----------
 | **CPU**      | Intel Core i7-2640M
+| **GPU**      | Intel HD 3000
 | **RAM**      | 16 GB DDR3
 | **SSD**      | 512 GB
 | **Wi-Fi & Bluetooth** | Broadcom BCM94352HMB / Atheros AR9285
