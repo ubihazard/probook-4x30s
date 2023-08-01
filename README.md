@@ -17,7 +17,7 @@ This repository contains OpenCore [EFI folder](https://github.com/ubihazard/prob
 | **USB 3.0**  | Realtek
 | **Card reader** | JMicron
 | **DVR-RW drive** | HP
-| **macOS**    | Monterey 12.6.8
+| **macOS**    | Monterey 12.6.8 / High Sierra 10.3.6
 | **OpenCore** | [0.9.4-5afed6e](https://github.com/ubihazard/OpenCorePkg-ProBook/releases/tag/v0.9.4-5afed6e) (version for ProBook)
 | **OCLP** | [0.6.8](https://github.com/dortania/OpenCore-Legacy-Patcher/releases/tag/0.6.8)
 
