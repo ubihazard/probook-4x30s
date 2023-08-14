@@ -199,7 +199,7 @@ Although the Broadcom setup section above is technically correct and is done acc
 a freed zone element has been modified in zone kalloc.80: expected 0 but found 0, bits changed 0
 ```
 
-The apparent solution is to disable these kexts in `config.plist` and install `BrcmPatchRAM2.kext` and `BrcmFirmwareRepo.kext` (not “Data”) to `/Library/Extensions` manually, and rebuild kernel cache. You will now also need to prevent `BrcmFirmwareData.kext` from loading on High Sierra by setting `MinKernel` to `18.0.0`:
+The apparent solution is to disable these kexts in `config.plist` and install `BrcmPatchRAM2.kext` and `BrcmFirmwareRepo.kext` (not “Data”) to `/Library/Extensions` manually, and rebuild kernel cache. You would also have to prevent `BrcmFirmwareData.kext` from loading on High Sierra by setting `MinKernel` to `18.0.0`:
 
 ```xml
     <dict>
