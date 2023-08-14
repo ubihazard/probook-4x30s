@@ -150,11 +150,11 @@ Open `WifiLocFix.kext/Contents/Info.plist` and change the country code (`US`) an
 
 ### Broadcom Wi-Fi
 
-Do the other way around. Mojave and below: enable `BrcmBluetoothInjector.kext` and disable `BrcmPatchRAM2.kext`. If you don‘t get Wi-Fi it means your card needs a [firmware uploader](https://github.com/acidanthera/BrcmPatchRAM#brcmbluetoothinjectorkext), so switch them around. *Do not use `BrcmPatchRAM2.kext` together with `BrcmBluetoothInjector.kext`, or you‘ll get kernel panics.* Add Broadcom configuration parameters to OpenCore `config.plist` `boot-args` with your country code (`NVRAM/Add/7C436110-AB2A-4BBB-A880-FE41995C9F82`):
+Do the other way around. Mojave and below: enable `BrcmBluetoothInjector.kext` and disable `BrcmPatchRAM2.kext`. If you don‘t get Wi-Fi it means your card needs a [firmware uploader](https://github.com/acidanthera/BrcmPatchRAM#brcmbluetoothinjectorkext), so switch them around. *Do not use `BrcmPatchRAM2.kext` together with `BrcmBluetoothInjector.kext`*, as the linked page indicates. Add Broadcom configuration parameters to OpenCore `config.plist` `boot-args` with your country code (`NVRAM/Add/7C436110-AB2A-4BBB-A880-FE41995C9F82`):
 
 ```xml
         <key>boot-args</key>
-        <string>-no_compat_check amfi_get_out_of_my_way=1 brcmfx-driver=1 brcmfx-country=US</string>
+        <string>-no_compat_check amfi_get_out_of_my_way=1 amfi=0x80 brcmfx-driver=1 brcmfx-country=US</string>
 ```
 
 **For ProBook 4x30s series only:** enable Wi-Fi BIOS whitelist bypass EFI driver in `UEFI/Drivers` (`Enabled` -> `true`):
@@ -190,6 +190,39 @@ You might also need to add `SSDT-ARPT-RP0X-BCM4352.aml` to your EFI ACPI folder 
 ```
 
 In my case this SSDT wasn‘t needed.
+
+### Broadcom Wi-Fi and High Sierra kernel panics
+
+Although the Broadcom setup section above is technically correct and is done according to the official instructions, in my case I ended up experiencing random kernel panics (especially on boot) with `BrcmPatchRAM2.kext` and `BrcmBluetoothInjector.kext` on High Sierra... (No problems on Big Sur or Monterey.) The panic message was kind of absurd too:
+
+```
+a freed zone element has been modified in zone kalloc.80: expected 0 but found 0, bits changed 0
+```
+
+The apparent solution is to disable these kexts in `config.plist` and install `BrcmPatchRAM2.kext` and `BrcmFirmwareRepo.kext` (not “Data”) to `/Library/Extensions` manually, and rebuild kernel cache. You will now also need to prevent `BrcmFirmwareData.kext` from loading on High Sierra by setting `MinKernel` to `18.0.0`:
+
+```xml
+    <dict>
+      <key>Arch</key>
+      <string>Any</string>
+      <key>BundlePath</key>
+      <string>BrcmFirmwareData.kext</string>
+      <key>Comment</key>
+      <string>BrcmFirmwareData.kext</string>
+      <key>Enabled</key>
+      <true/>
+      <key>ExecutablePath</key>
+      <string>Contents/MacOS/BrcmFirmwareData</string>
+      <key>MaxKernel</key>
+      <string></string>
+      <key>MinKernel</key>
+      <string>18.0.0</string>
+      <key>PlistPath</key>
+      <string>Contents/Info.plist</string>
+    </dict>
+```
+
+The same issue probably affects Mojave too. If it is, bump the `MinKernel` to `19.0.0`.
 
 ### Intel Wi-Fi
 
@@ -235,7 +268,7 @@ For laptop models with dedicated GPU soldered onto motherboard an additional `-w
 
 ```xml
         <key>boot-args</key>
-        <string>-no_compat_check amfi_get_out_of_my_way=1 -wegnoegpu</string>
+        <string>-no_compat_check amfi_get_out_of_my_way=1 amfi=0x80 -wegnoegpu</string>
 ```
 
 This causes all dedicated GPUs to be disabled. Make sure to also disable dGPU in your laptop‘s BIOS.
@@ -405,7 +438,7 @@ Intel HD 3000 on non-Apple hardware is known to be plagued by graphical artifact
 
 The solution to this problem turns out to be quite simple: perform an EC reset (“EC” stands for “embedded controller”) and *do not boot into anything other than macOS*: no Windows, no Linux live USBs, etc.
 
-An EC reset is performed by disconnecting your laptop from all power sources (AC adapter and battery) and pressing and holding the power button for 30 seconds. Make sure to hold the button for no less than 30 seconds. If in doubt, hold it for several seconds longer, – it won‘t hurt.
+An EC reset is performed by disconnecting your laptop from all power sources (AC adapter and battery) and pressing and holding the power button for ≈30 seconds. You need to hold the button long enough for capacitors to fully discharge. If in doubt, hold it for several seconds longer, – it won‘t hurt.
 
 Apparently, there‘s something low-level going on in the code that handles the platform and it messes up with EC in a way that is incompatible between operating systems. I.e. macOS “configures” it in its own way and this results in glitches now happening, for example, on Ubuntu, – and the other way around.
 
@@ -500,7 +533,7 @@ In my case the slide value resulted in **8**, which is set in the `config.plist`
 
 ```xml
         <key>boot-args</key>
-        <string>-no_compat_check amfi_get_out_of_my_way=1 slide=8</string>
+        <string>-no_compat_check amfi_get_out_of_my_way=1 amfi=0x80 slide=8</string>
 ```
 
 Disabling SIP
@@ -581,7 +614,7 @@ Add `ipc_control_port_options=0` to your OpenCore `config.plist` `boot-args`:
 
 ```xml
         <key>boot-args</key>
-        <string>-no_compat_check amfi_get_out_of_my_way=1 ipc_control_port_options=0 brcmfx-driver=1 brcmfx-country=EN</string>
+        <string>-no_compat_check amfi_get_out_of_my_way=1 amfi=0x80 ipc_control_port_options=0</string>
 
 ```
 

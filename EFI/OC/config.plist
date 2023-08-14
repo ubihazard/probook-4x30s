@@ -1260,7 +1260,7 @@
 				<key>Comment</key>
 				<string>SMCLightSensor.kext</string>
 				<key>Enabled</key>
-				<true/>
+				<false/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/SMCLightSensor</string>
 				<key>MaxKernel</key>
@@ -1818,7 +1818,7 @@
 				<key>Comment</key>
 				<string>ASPP-Override.kext</string>
 				<key>Enabled</key>
-				<false/>
+				<true/>
 				<key>ExecutablePath</key>
 				<string></string>
 				<key>MaxKernel</key>
@@ -2083,7 +2083,7 @@
 				<key>SystemAudioVolume</key>
 				<data>UA==</data>
 				<key>boot-args</key>
-				<string>-v -no_compat_check amfi_get_out_of_my_way=1</string>
+				<string>-v -no_compat_check</string>
 				<key>csr-active-config</key>
 				<data>AAAAAA==</data>
 				<key>prev-lang:kbd</key>
