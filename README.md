@@ -150,7 +150,7 @@ Open `WifiLocFix.kext/Contents/Info.plist` and change the country code (`US`) an
 
 ### Broadcom Wi-Fi
 
-Do the other way around. Mojave and below: enable `BrcmBluetoothInjector.kext` and disable `BrcmPatchRAM2.kext`. If you don‘t get Wi-Fi it means your card needs a [firmware uploader](https://github.com/acidanthera/BrcmPatchRAM#brcmbluetoothinjectorkext), so switch them around. *Do not use `BrcmPatchRAM2.kext` together with `BrcmBluetoothInjector.kext`*, as the linked page indicates. Add Broadcom configuration parameters to OpenCore `config.plist` `boot-args` with your country code (`NVRAM/Add/7C436110-AB2A-4BBB-A880-FE41995C9F82`):
+Do the other way around. Mojave and below: enable `BrcmBluetoothInjector.kext` and disable `BrcmPatchRAM2.kext`. If you don‘t get Wi-Fi it means your card needs a [firmware uploader](https://github.com/acidanthera/BrcmPatchRAM#brcmbluetoothinjectorkext), so switch them around. *Do not use `BrcmPatchRAM2.kext` together with `BrcmBluetoothInjector.kext`*, as the linked page warns. Add Broadcom configuration parameters to OpenCore `config.plist` `boot-args` with your country code (`NVRAM/Add/7C436110-AB2A-4BBB-A880-FE41995C9F82`):
 
 ```xml
         <key>boot-args</key>
@@ -193,7 +193,7 @@ In my case this SSDT wasn‘t needed.
 
 ### Broadcom Wi-Fi and High Sierra kernel panics
 
-Although the Broadcom setup section above is technically correct and is done according to the official instructions, in my case I ended up experiencing random kernel panics (especially on boot) with `BrcmPatchRAM2.kext` and `BrcmBluetoothInjector.kext` on High Sierra... (No problems on Big Sur or Monterey.) The panic message was kind of absurd too:
+Although the Broadcom setup section above is technically correct and is done according to the official instructions, in my case I ended up experiencing random kernel panics (especially on boot) with `BrcmPatchRAM2.kext` or `BrcmBluetoothInjector.kext` on High Sierra (tried separately). The panic message was kind of absurd too:
 
 ```
 a freed zone element has been modified in zone kalloc.80: expected 0 but found 0, bits changed 0
