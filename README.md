@@ -536,8 +536,8 @@ In my case the slide value resulted in **8**, which is set in the `config.plist`
         <string>-no_compat_check amfi_get_out_of_my_way=1 amfi=0x80 slide=8</string>
 ```
 
-Disabling SIP
--------------
+Disabling SIP and AMFI
+----------------------
 
 Due to extensive modifications required to support this laptop on modern macOS it is better to disable SIP right away (`NVRAM/Add/7C436110-AB2A-4BBB-A880-FE41995C9F82`):
 
@@ -547,6 +547,13 @@ Due to extensive modifications required to support this laptop on modern macOS i
 ```
 
 The configured value is `0x803`.
+
+AMFI is disabled via `boot-args`:
+
+```xml
+        <key>boot-args</key>
+        <string>... amfi_get_out_of_my_way=1 amfi=0x80 ...</string>
+```
 
 Filling your system information
 -------------------------------
